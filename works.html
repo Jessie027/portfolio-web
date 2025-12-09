@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Works - JessieWu's Archive</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="fade-in">
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-circle" id="cursorCircle"></div>
+    <div class="dash-line top-scroll"></div>
+    <div class="header-bg" style="opacity: 1;"></div>
+    <div class="dash-line header-bottom-static" style="opacity: 1;"></div>
+    <div class="dash-line bottom-scroll"></div>
+    <div class="square top-left"></div>
+    <div class="square bottom-right"></div>
+
+    <div class="intro-container moved static-mode">
+        <div class="main-title">JessieWu’s Incomplete Archive</div>
+    </div>
+
+    <nav class="nav-menu" id="navMenu" style="opacity: 1;">
+        <a href="index.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Home</div>
+                <div class="nav-face nav-back">Home</div>
+            </div>
+        </a>
+        <a href="about.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">About</div>
+                <div class="nav-face nav-back">About</div>
+            </div>
+        </a>
+        <a href="works.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Works</div>
+                <div class="nav-face nav-back">Works</div>
+            </div>
+        </a>
+        <a href="#" class="nav-item" id="contactBtn">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Contact</div>
+                <div class="nav-face nav-back">Contact</div>
+            </div>
+        </a>
+    </nav>
+
+    <main class="works-main">
+
+        <div class="archive-shelf">
+
+            <div class="archive-file completed" data-id="work1">
+                <div class="file-spine">
+                    <span class="file-code">NO.001</span>
+                    <span class="file-title">Aurora Path</span>
+                    <div class="file-status-light"></div>
+                </div>
+                <div class="file-cover" style="background-image: url('images/work1.png');">
+                    <div class="cover-overlay">VIEW FILE</div>
+                </div>
+            </div>
+
+            <div class="archive-file completed" data-id="work2">
+                <div class="file-spine">
+                    <span class="file-code">NO.002</span>
+                    <span class="file-title">Stability Test v0.1</span>
+                    <div class="file-status-light"></div>
+                </div>
+                <div class="file-cover" style="background-image: url('images/work2.jpg');">
+                    <div class="cover-overlay">VIEW FILE</div>
+                </div>
+            </div>
+
+            <div class="archive-file incomplete">
+                <div class="file-spine">
+                    <span class="file-code">ERROR</span>
+                    <span class="file-title">Mood Tips</span>
+                    <div class="file-status-light error"></div>
+                </div>
+                <div class="file-cover" style="background-image: url('images/error1.png');">
+                    <div class="cover-overlay">ACCESS DENIED</div>
+                    <div class="lock-icon">🔒</div>
+                </div>
+            </div>
+
+            <div class="archive-file completed" data-id="work3">
+                <div class="file-spine">
+                    <span class="file-code">NO.003</span>
+                    <span class="file-title">Ilianna</span>
+                    <div class="file-status-light"></div>
+                </div>
+                <div class="file-cover" style="background-image: url('images/work3.png');">
+                    <div class="cover-overlay">VIEW FILE</div>
+                </div>
+            </div>
+
+            <div class="archive-file incomplete">
+                <div class="file-spine">
+                    <span class="file-code">ERROR</span>
+                    <span class="file-title">The 'Transient Shell'</span>
+                    <div class="file-status-light error"></div>
+                </div>
+                <div class="file-cover" style="background-image: url('images/error2.png');">
+                    <div class="cover-overlay">FILE MISSING</div>
+                    <div class="lock-icon">⚠️</div>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="shelf-line"></div>
+    </main>
+
+    <div class="work-detail-overlay" id="workDetailOverlay">
+
+        <div class="detail-top-bar">
+            <div class="file-id-tag">FILE_ID: <span id="d-id">UNKNOWN</span></div>
+            <div class="file-status-tag">STATUS: DECLASSIFIED</div>
+            <button class="close-detail-btn" id="closeDetailBtn">[ CLOSE_FILE ] ×</button>
+        </div>
+
+        <div class="detail-content archive-layout">
+
+            <div class="archive-left-col">
+                <div class="evidence-frame">
+                    <div class="corner-mark tl"></div>
+                    <div class="corner-mark tr"></div>
+                    <div class="corner-mark bl"></div>
+                    <div class="corner-mark br"></div>
+                    <img src="" alt="Project Image" class="detail-img">
+                    <div class="img-caption">FIG.01 // VISUAL_DATA</div>
+                </div>
+
+                <div class="barcode-box">
+                    <div class="barcode"></div>
+                    <div class="serial-num">SN-7390-2241-X</div>
+                </div>
+            </div>
+
+            <div class="archive-right-col">
+
+                <div class="report-header">
+                    <h1 class="detail-title">PROJECT TITLE</h1>
+                    <div class="meta-grid">
+                        <div class="meta-item">
+                            <span class="label">DATE:</span>
+                            <span class="value detail-year">2024</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="label">TYPE:</span>
+                            <span class="value detail-type">UI DESIGN</span>
+                        </div>
+                        <div class="meta-item">
+                            <span class="label">AUTHOR:</span>
+                            <span class="value">JESSIE WU</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="report-body">
+                    <div class="body-label">DESCRIPTION //</div>
+                    <div class="detail-body">
+                        <p>Loading data...</p>
+                    </div>
+                </div>
+
+                <div class="report-footer">
+                    <div class="stamp-box">ARCHIVED</div>
+                    <div class="footer-note">>>> END OF RECORD</div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-card">
+            <button class="close-modal-btn" id="closeModal">×</button>
+            <div class="modal-header">CONNECTION REQUEST</div>
+            <div class="modal-body">
+                <p class="modal-desc">您可以写信给我，期待您的来信。</p>
+                <div class="email-box">
+                    <span id="emailText">jessiewu327@qq.com</span>
+                    <button class="copy-btn" id="copyBtn">COPY</button>
+                </div>
+            </div>
+            <div class="modal-deco-line"></div>
+        </div>
+    </div>
+
+    <script src="transition.js"></script>
+    <script src="cursor.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Works 页面专属逻辑 ---
+            const allFiles = document.querySelectorAll('.archive-file');
+            const overlay = document.getElementById('workDetailOverlay');
+            const closeDetailBtn = document.getElementById('closeDetailBtn');
+
+            // 模拟作品数据
+            const worksData = {
+                'work1': {
+                    id: 'NO.001',
+                    year: '2024',
+                    type: 'Cross-Media Design',
+                    title: 'Aurora Path',
+                    img: 'images/cover.png',
+                    desc: '该项目通过互动装置科普了极光的成因与变化，将科技与叙事相融，带领观众走入故事中，随着小耳廓狐哈桑共同游览并创造独一无二的极光。<br><br>项目使用TouchDesigner模拟极光，YOLOv8模型实现极光跟随。互动装置通过Esp32与传感器实时监测并传输数据，模拟大气成分与太阳风的变化，改变极光形态，增强互动体验，带来沉浸式的科学探索。'
+                },
+                'work2': {
+                    id: 'NO.002',
+                    year: '2024',
+                    type: 'Video Game',
+                    title: 'Stability Test v0.1',
+                    img: 'images/work2.jpg',
+                    desc: '这是一场关于规则与荒诞的沉浸式实验。<br><br>玩家被选中参与某系统的「稳定性评估」，每日重复着相同的路径：从家到十字路口，再到办公室。一切看似秩序井然——直到玩家开始触碰那些不该触碰的规则。餐桌变成单杠，红绿灯化作食品安全指示牌，同事的工位坍缩成棺材... <br><br>世界正褪去黑白滤镜，裸露出荒诞的彩色内核。'
+                },
+                'work3': {
+                    id: 'NO.003',
+                    year: '2024',
+                    type: 'Character Design',
+                    title: 'Ilianna',
+                    img: 'images/work3.png',
+                    desc: '伊莉安那原本只是一个有些胆小却心地善良的普通学生，她热爱自己的校园生活，也珍惜身边的同学与老师。尽管在日常中隐约察觉过学校里不对劲的细节，她仍选择相信“平凡”的日常。直到某天，她被里世界的存在“它”选中，成为其眷属，被迫在表世界与里世界之间无意识地穿梭。在第一次从里世界逃出后，她被强制编入负责监察异常的督查部，站到了人类阵营的最前线。自此，她体内诞生了表里双重人格：表人格依旧是那个温柔怯懦、渴望守护同伴的她；而里人格则在“它”的污染下觉醒，会在不直接伤害任何人的前提下，引导周围的师生进入里世界。里人格能继承表人格的全部记忆，而表人格却对里人格的行为一无所知，使她在守护与背叛之间，成为一枚游走于光影与裂隙中的危险而温柔的“桥梁”。'
+                }
+            };
+
+            // === 新增：检查 URL 是否要求自动打开某个作品 ===
+            const urlParams = new URLSearchParams(window.location.search);
+            const targetId = urlParams.get('open'); // 获取 ?open= 后面的值
+
+            if (targetId) {
+                const targetFile = document.querySelector(`.archive-file[data-id="${targetId}"]`);
+                if (targetFile) {
+                    setTimeout(() => {
+                        // 模拟点击打开
+                        targetFile.click();
+                    }, 600);
+                }
+            }
+
+            // 2. 点击事件中的注入逻辑更新
+            allFiles.forEach(file => {
+                file.addEventListener('click', () => {
+                    if (file.classList.contains('incomplete')) return;
+
+                    const id = file.getAttribute('data-id');
+                    const data = worksData[id];
+
+                    if (data) {
+                        // 填充顶部 FILE_ID
+                        overlay.querySelector('#d-id').innerText = data.id;
+
+                        // 填充图片
+                        overlay.querySelector('.detail-img').src = data.img;
+
+                        // 填充标题
+                        overlay.querySelector('.detail-title').innerText = data.title;
+
+                        // 填充元数据 (年份和类型)
+                        overlay.querySelector('.detail-year').innerText = data.year;
+                        overlay.querySelector('.detail-type').innerText = data.type;
+
+                        // 填充正文 (支持HTML换行)
+                        overlay.querySelector('.detail-body p').innerHTML = data.desc;
+
+                        overlay.classList.add('active');
+                    }
+                });
+            });
+
+            // 关闭详情页
+            closeDetailBtn.addEventListener('click', () => {
+                overlay.classList.remove('active');
+            });
+
+            // --- Contact 弹窗逻辑 (通用) ---
+            const contactBtn = document.getElementById('contactBtn');
+            const contactModal = document.getElementById('contactModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const copyBtn = document.getElementById('copyBtn');
+            const emailText = document.getElementById('emailText');
+
+            if (contactBtn) {
+                contactBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    contactModal.classList.add('active');
+                });
+            }
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => {
+                    contactModal.classList.remove('active');
+                });
+            }
+            if (contactModal) {
+                contactModal.addEventListener('click', (e) => {
+                    if (e.target === contactModal) contactModal.classList.remove('active');
+                });
+            }
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const email = emailText.innerText;
+                    navigator.clipboard.writeText(email).then(() => {
+                        const originalText = copyBtn.innerText;
+                        copyBtn.innerText = "COPIED!";
+                        copyBtn.style.borderColor = "var(--accent-color)";
+                        copyBtn.style.color = "var(--accent-color)";
+                        setTimeout(() => {
+                            copyBtn.innerText = originalText;
+                            copyBtn.style.borderColor = "";
+                            copyBtn.style.color = "";
+                        }, 2000);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

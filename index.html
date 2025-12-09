@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JessieWu's Archive</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="preloader">
+        <div class="loader-content-geometry">
+            <div class="loader-box-wrapper">
+                <div class="outer-dashed-box"></div>
+                <div class="inner-solid-box" id="innerBox">
+                    <span id="loaderPercent">0%</span>
+                </div>
+            </div>
+
+            <div class="loader-text-group">
+                <div class="loader-title">ARCHIVE_SYSTEM_V1.0</div>
+                <div class="loader-status">COMPILING DATA...</div>
+            </div>
+        </div>
+    </div>
+    <div class="dash-line top-scroll"></div>
+    <div class="header-bg" id="headerBg"></div>
+    <div class="dash-line header-bottom-static" id="staticLine"></div>
+    <div class="dash-line bottom-scroll"></div>
+    <div class="square top-left"></div>
+    <div class="square bottom-right"></div>
+
+    <div class="intro-container" id="introBox">
+        <div class="main-title">JessieWu’s Incomplete Archive</div>
+        <div class="subtitle">—— 记录一些作品 以及 未完成的故事 ——</div>
+    </div>
+
+    <nav class="nav-menu" id="navMenu">
+        <a href="index.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Home</div>
+                <div class="nav-face nav-back">Home</div>
+            </div>
+        </a>
+        <a href="about.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">About</div>
+                <div class="nav-face nav-back">About</div>
+            </div>
+        </a>
+        <a href="works.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Works</div>
+                <div class="nav-face nav-back">Works</div>
+            </div>
+        </a>
+        <a href="#" class="nav-item" id="contactBtn">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Contact</div>
+                <div class="nav-face nav-back">Contact</div>
+            </div>
+        </a>
+    </nav>
+
+    <main class="main-content manual-trigger" id="mainContent">
+        <div class="center-stage-wrapper">
+            <div class="corner-decor top-left"></div>
+            <div class="img-layer"></div>
+            <div class="guide-lines-box">
+                <div class="corner-decor bottom-right"></div>
+            </div>
+            <div class="caption-text">点击查看精选代表作</div>
+        </div>
+        <div class="scroll-column left">
+            <div class="tag-track scroll-down">
+                <a href="about.html" class="tag-box transition-link">STORYTELLER</a>
+                <a href="about.html" class="tag-box transition-link">INFJ</a>
+                <a href="about.html" class="tag-box transition-link">VISUAL THINKER</a>
+                <a href="about.html" class="tag-box transition-link">DESIGNER</a>
+                <a href="about.html" class="tag-box transition-link">EXPERIMENTAL</a>
+                <a href="about.html" class="tag-box transition-link">STORYTELLER</a>
+                <a href="about.html" class="tag-box transition-link">INFJ</a>
+                <a href="about.html" class="tag-box transition-link">VISUAL THINKER</a>
+                <a href="about.html" class="tag-box transition-link">DESIGNER</a>
+                <a href="about.html" class="tag-box transition-link">EXPERIMENTAL</a>
+            </div>
+        </div>
+        <div class="scroll-column right">
+            <div class="tag-track scroll-up">
+                <a href="about.html" class="tag-box transition-link">FIGMA</a>
+                <a href="about.html" class="tag-box transition-link">BLENDER</a>
+                <a href="about.html" class="tag-box transition-link">TOUCHDESIGNER</a>
+                <a href="about.html" class="tag-box transition-link">PYTHON</a>
+                <a href="about.html" class="tag-box transition-link">UNITY</a>
+                <a href="about.html" class="tag-box transition-link">FIGMA</a>
+                <a href="about.html" class="tag-box transition-link">BLENDER</a>
+                <a href="about.html" class="tag-box transition-link">TOUCHDESIGNER</a>
+                <a href="about.html" class="tag-box transition-link">PYTHON</a>
+                <a href="about.html" class="tag-box transition-link">UNITY</a>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-card">
+            <button class="close-modal-btn" id="closeModal">×</button>
+            <div class="modal-header">CONNECTION REQUEST</div>
+            <div class="modal-body">
+                <p class="modal-desc">您可以写信给我，期待您的来信。</p>
+                <div class="email-box">
+                    <span id="emailText">jessiewu327@qq.com</span>
+                    <button class="copy-btn" id="copyBtn">COPY</button>
+                </div>
+            </div>
+            <div class="modal-deco-line"></div>
+        </div>
+    </div>
+
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-circle" id="cursorCircle"></div>
+
+    <script src="transition.js"></script>
+    <script src="cursor.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // ==================== [修改] Loading 逻辑 START ====================
+
+            const preloader = document.getElementById('preloader');
+            // 获取新的元素：实心框
+            const innerBox = document.getElementById('innerBox');
+            const loaderPercent = document.getElementById('loaderPercent');
+
+            let progress = 0;
+
+            // 为了让动画更有看头，我们把模拟加载的时间稍微调慢一点点
+            const timer = setInterval(() => {
+                // 每次增加少一点，让过程更平滑
+                progress += Math.random() * 2;
+
+                if (progress > 100) progress = 100;
+
+                // --- 核心变化 ---
+                // 计算缩放比例：0% 对应 scale(0)，100% 对应 scale(1)
+                const scaleValue = progress / 100;
+
+                // 应用样式：保持居中定位的同时，设置缩放
+                innerBox.style.transform = `translate(-50%, -50%) scale(${scaleValue})`;
+
+                // 更新数字
+                loaderPercent.innerText = Math.floor(progress) + '%';
+
+                if (progress === 100) {
+                    clearInterval(timer);
+
+                    // 加载完成，停留一小会儿展示完整方块
+                    setTimeout(() => {
+                        // 淡出 Loading
+                        preloader.style.opacity = '0';
+                        preloader.style.pointerEvents = 'none';
+
+                        // 开始主页动画
+                        startHomeAnimations();
+                    }, 800); // 稍微多停留一下，欣赏一下完成态
+                }
+            }, 30); // 更新频率加快，更丝滑
+
+            // ==================== [修改] Loading 逻辑 END ====================
+
+
+            // 把原来的动画逻辑封装成一个函数
+            function startHomeAnimations() {
+                const introBox = document.getElementById('introBox');
+                const mainTitle = introBox.querySelector('.main-title');
+                const subtitle = introBox.querySelector('.subtitle');
+                const navMenu = document.getElementById('navMenu');
+                const mainContent = document.getElementById('mainContent');
+                const headerBg = document.getElementById('headerBg');
+                const staticLine = document.getElementById('staticLine');
+
+                // 1. 大标题淡入
+                setTimeout(() => {
+                    mainTitle.style.opacity = "1";
+                }, 500);
+
+                // 2. 小标题淡入
+                setTimeout(() => {
+                    subtitle.style.opacity = "1";
+                }, 1500);
+
+                // 3. Header 形成
+                setTimeout(() => {
+                    introBox.classList.add('moved');
+                    headerBg.style.opacity = "1";
+                    staticLine.style.opacity = "1";
+                    navMenu.style.opacity = "1";
+                }, 3000);
+
+                // 4. 内容淡入
+                setTimeout(() => {
+                    mainContent.classList.add('fade-in');
+                }, 4000);
+            }
+
+
+            // --- 其他点击逻辑 (保持不变) ---
+
+            const centerStage = document.querySelector('.center-stage-wrapper');
+            const mainContent = document.getElementById('mainContent');
+            if (centerStage) {
+                centerStage.style.cursor = 'pointer';
+                centerStage.addEventListener('click', () => {
+                    if (mainContent) mainContent.classList.remove('fade-in');
+                    setTimeout(() => {
+                        window.location.href = 'works.html?open=work1';
+                    }, 400);
+                });
+            }
+
+            const contactBtn = document.getElementById('contactBtn');
+            const contactModal = document.getElementById('contactModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const copyBtn = document.getElementById('copyBtn');
+            const emailText = document.getElementById('emailText');
+
+            if (contactBtn) {
+                contactBtn.addEventListener('click', (e) => { e.preventDefault(); contactModal.classList.add('active'); });
+            }
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => { contactModal.classList.remove('active'); });
+            }
+            if (contactModal) {
+                contactModal.addEventListener('click', (e) => { if (e.target === contactModal) contactModal.classList.remove('active'); });
+            }
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    const email = emailText.innerText;
+                    navigator.clipboard.writeText(email).then(() => {
+                        const originalText = copyBtn.innerText;
+                        copyBtn.innerText = "COPIED!";
+                        copyBtn.style.borderColor = "var(--accent-color)";
+                        copyBtn.style.color = "var(--accent-color)";
+                        setTimeout(() => {
+                            copyBtn.innerText = originalText;
+                            copyBtn.style.borderColor = "";
+                            copyBtn.style.color = "";
+                        }, 2000);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>

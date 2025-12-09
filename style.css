@@ -1,0 +1,1735 @@
+/* =========================================
+   1. 字体与全局设置 (Fonts & Globals)
+   ========================================= */
+
+@font-face {
+    font-family: 'MyCustomTitleFont';
+    src: url('fonts/TitleFont.ttf');
+}
+
+@font-face {
+    font-family: 'MyCustomBodyFont';
+    src: url('fonts/BodyFont.otf');
+    /* 确保后缀正确 */
+}
+
+:root {
+    --bg-color: #050505;
+    --text-main: #ffffff;
+    --text-sub: #888888;
+    --accent-color: #00f2ff;
+    /* 赛博青 */
+    --accent-glow: rgba(0, 242, 255, 0.4);
+    --line-color: #333;
+    --card-bg: rgba(255, 255, 255, 0.05);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'MyCustomBodyFont', 'Helvetica Neue', Arial, sans-serif;
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+    position: relative;
+
+    /* 网格背景 */
+    background-image:
+        linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+    background-size: 50px 50px;
+
+    opacity: 1;
+    /* 确保背景常驻 */
+}
+
+
+/* =========================================
+   2. 页面转场逻辑 (Transitions)
+   ========================================= */
+
+/* 所有页面的 main 内容区默认状态：透明 + 下沉 */
+main {
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease, transform 0.4s ease;
+    width: 100%;
+    height: 100%;
+}
+
+/* 进场状态：不透明 + 归位 */
+main.fade-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+
+/* =========================================
+   3. 装饰元素 (Decorations & Header)
+   ========================================= */
+
+/* 虚线系统 */
+.dash-line {
+    position: absolute;
+    left: 0;
+    width: 200%;
+    height: 1px;
+    background-image: linear-gradient(90deg, var(--text-sub) 50%, transparent 50%);
+    background-size: 10px 100%;
+    z-index: 25;
+}
+
+.dash-line.top-scroll {
+    top: 60px;
+    animation: scroll-x 20s linear infinite;
+}
+
+.dash-line.bottom-scroll {
+    bottom: 60px;
+    animation: scroll-x 20s linear infinite;
+}
+
+.dash-line.header-bottom-static {
+    top: 120px;
+    width: 200%;
+    opacity: 0;
+    transition: opacity 1s ease;
+    animation: scroll-x 20s linear infinite;
+}
+
+/* Header 背景块 */
+.header-bg {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background-color: rgba(255, 255, 255, 0.05);
+    z-index: 14;
+    opacity: 0;
+    transition: opacity 1s ease;
+    backdrop-filter: blur(5px);
+}
+
+/* 角落方块 */
+.square {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    background-color: var(--text-main);
+    z-index: 26;
+    transition: all 0.3s ease;
+}
+
+.square.top-left {
+    top: 54px;
+    left: 30px;
+    box-shadow: 0 0 10px var(--accent-glow);
+    animation: pulse 2s infinite;
+}
+
+.square.bottom-right {
+    bottom: 54px;
+    right: 30px;
+    background-color: var(--accent-color);
+    animation: pulse 2s infinite;
+}
+
+
+/* =========================================
+   4. 标题动画 (Intro Title)
+   ========================================= */
+
+.intro-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    /* 初始居中 */
+    width: auto;
+    white-space: nowrap;
+    text-align: center;
+    z-index: 20;
+    will-change: top, left, transform;
+
+    /* 统一动画曲线 */
+    transition:
+        top 1.5s cubic-bezier(0.4, 0, 0.2, 1),
+        left 1.5s cubic-bezier(0.4, 0, 0.2, 1),
+        transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.main-title {
+    font-family: 'MyCustomTitleFont', sans-serif;
+    font-size: 3rem;
+    /* 初始字号固定 */
+    font-weight: normal;
+    opacity: 0;
+    letter-spacing: 1px;
+    line-height: 1;
+    transform-origin: left center;
+    transform: scale(1);
+    will-change: transform, opacity;
+
+    /* 只监听 transform */
+    transition: opacity 1s ease, transform 1.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.subtitle {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    margin-top: 15px;
+    font-size: 1rem;
+    color: var(--text-sub);
+    font-weight: 300;
+    text-align: center;
+    opacity: 0;
+    transition: opacity 1s ease;
+    pointer-events: none;
+}
+
+/* 移动后的状态 (Moved) */
+.intro-container.moved {
+    top: 90px;
+    left: 50px;
+    transform: translate(0, -50%);
+}
+
+.intro-container.moved .main-title {
+    transform: scale(0.6);
+    /* 只缩放，不改字号 */
+}
+
+.intro-container.moved .subtitle {
+    opacity: 0 !important;
+    transition: opacity 0.3s ease !important;
+}
+
+/* 静态模式 (用于 About/Works 页面，防止标题乱动) */
+.intro-container.static-mode {
+    transition: none !important;
+    animation: none !important;
+}
+
+.intro-container.static-mode .main-title {
+    opacity: 1 !important;
+    transform: scale(0.6) !important;
+    transition: none !important;
+}
+
+.intro-container.static-mode .subtitle {
+    display: none;
+}
+
+
+/* =========================================
+   5. 导航菜单 (3D Flip Navigation)
+   ========================================= */
+
+.nav-menu {
+    position: absolute;
+    top: 60px;
+    height: 60px;
+    right: 50px;
+    display: flex;
+    gap: 0;
+    opacity: 0;
+    transition: opacity 1s ease 0.5s;
+    z-index: 20;
+    perspective: 1000px;
+}
+
+.nav-item {
+    position: relative;
+    width: 100px;
+    height: 100%;
+    text-decoration: none;
+    cursor: pointer;
+    display: block;
+}
+
+.nav-flipper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    transform-style: preserve-3d;
+    transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-origin: center center;
+}
+
+.nav-item:hover .nav-flipper,
+.nav-item.active .nav-flipper {
+    transform: rotateX(90deg);
+}
+
+.nav-face {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1rem;
+    backface-visibility: hidden;
+    border: none;
+}
+
+.nav-front {
+    background-color: transparent;
+    color: var(--text-sub);
+    transform: translateZ(30px);
+}
+
+.nav-back {
+    background-color: #4D4D4D;
+    color: #ffffff;
+    font-weight: bold;
+    border-left: 1px dashed rgba(255, 255, 255, 0.4);
+    border-right: 1px dashed rgba(255, 255, 255, 0.4);
+    transform: rotateX(-90deg) translateZ(30px);
+}
+
+
+/* =========================================
+   6. Home 页面样式 (Home Page)
+   ========================================= */
+
+/* .main-content 使用全局 main 样式，此处无需额外定义 */
+
+/* --- 中间精选大图 (Center Stage) --- */
+.center-stage-wrapper {
+    position: absolute;
+    /* Home页居中定位 */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    height: 55vh;
+    aspect-ratio: 7 / 5;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    /* 交互动效基础 */
+    transition: transform 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    cursor: pointer;
+    z-index: 10;
+}
+
+/* 悬停放大 */
+.center-stage-wrapper:hover {
+    transform: translate(-50%, -50%) scale(1.02);
+    /* 保持居中并放大 */
+}
+
+/* 图片层 */
+.img-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: #333;
+    background-image: url('images/cover.png');
+    /* 默认精选图 */
+    background-size: cover;
+    background-position: center;
+    z-index: 1;
+    pointer-events: none;
+    /* 让鼠标穿透给wrapper */
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+}
+
+/* 紧贴图片的虚线框 */
+.guide-lines-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 1px dashed rgba(255, 255, 255, 0.3);
+    z-index: 2;
+    pointer-events: none;
+}
+
+/* 角落小方块装饰 */
+.corner-decor {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: var(--text-main);
+    transition: all 0.3s;
+}
+
+.corner-decor.top-left {
+    top: -4px;
+    left: -4px;
+    z-index: 0;
+    background-color: var(--text-sub);
+}
+
+.corner-decor.bottom-right {
+    bottom: -4px;
+    right: -4px;
+    background-color: var(--accent-color);
+    z-index: 3;
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* 底部文字 */
+.caption-text {
+    position: absolute;
+    bottom: -40px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-family: 'MyCustomBodyFont', sans-serif;
+    font-size: 0.9rem;
+    color: var(--text-sub);
+    letter-spacing: 1px;
+    white-space: nowrap;
+    z-index: 2;
+    opacity: 0.8;
+    transition: all 0.3s;
+}
+
+/* 悬停文字发光 */
+.center-stage-wrapper:hover .caption-text {
+    color: var(--accent-color);
+    text-shadow: 0 0 8px var(--accent-glow);
+    opacity: 1;
+}
+
+
+/* --- 滚动标签 (Data Strips) --- */
+.scroll-column {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 300px;
+    width: 150px;
+    overflow: hidden;
+    mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+    -webkit-mask-image: linear-gradient(to bottom, transparent, black 15%, black 85%, transparent);
+    pointer-events: none;
+}
+
+.scroll-column * {
+    pointer-events: auto;
+}
+
+.scroll-column.left {
+    left: 8vw;
+    text-align: right;
+}
+
+.scroll-column.right {
+    right: 8vw;
+    text-align: left;
+}
+
+.tag-track {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 20px;
+    /* 补全循环间距 */
+    will-change: transform;
+    transform: translateZ(0);
+}
+
+.scroll-up {
+    animation: scroll-vertical 20s linear infinite;
+}
+
+.scroll-down {
+    animation: scroll-vertical-reverse 20s linear infinite;
+}
+
+/* 标签盒子 */
+.tag-box {
+    position: relative;
+    display: block;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.03) 0%, transparent 100%);
+    color: var(--text-sub);
+    padding: 10px 15px;
+    border: none;
+    border-left: 2px solid #333;
+    font-family: 'MyCustomBodyFont', Courier, monospace;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    white-space: nowrap;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.tag-box::after {
+    content: '';
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 3px;
+    height: 3px;
+    background-color: #333;
+    transition: background-color 0.3s;
+}
+
+/* 标签悬停 */
+.tag-box:hover {
+    border-left-color: var(--accent-color);
+    background: linear-gradient(90deg, rgba(0, 242, 255, 0.08) 0%, transparent 100%);
+    color: var(--text-main);
+    transform: translateX(10px);
+    /* 抽出效果 */
+    box-shadow: -5px 0 15px -5px var(--accent-glow);
+}
+
+.tag-box:hover::after {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 5px var(--accent-color);
+}
+
+
+/* =========================================
+   7. About 页面样式 (About Page)
+   ========================================= */
+
+.about-main {
+    position: absolute;
+    top: 120px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 180px);
+
+    display: flex;
+    /* 修改这里：从 center 改为 flex-start，让内容靠左 */
+    justify-content: flex-start;
+    align-items: center;
+    gap: 80px;
+
+    /* 修改这里：增加左侧内边距，控制整体位置 */
+    padding: 0 10vw 0 15vw;
+
+    opacity: 0;
+    animation: simpleFadeIn 1s ease forwards 0.3s;
+}
+
+.portrait-wrapper {
+    position: relative;
+    width: 35vh;
+    height: 50vh;
+    flex-shrink: 0;
+
+    /* 新增：外层实线边框和背景 */
+    border: 1px solid rgba(0, 242, 255, 0.3);
+    /* 微弱的青色边框 */
+    background: rgba(0, 0, 0, 0.3);
+    /* 深色半透明背景 */
+    padding: 12px;
+    /* 为内部虚线框留出空间 */
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+/* 3. 照片本身：调整大小以适应新的容器，并添加滤镜 */
+.portrait-img {
+    /* 修改：宽高设为100%，填满 padding 内部区域 */
+    width: 100%;
+    height: 100%;
+    background-color: #222;
+    background-image: url('images/portrait.jpg');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    z-index: 1;
+
+    /* 新增：添加滤镜，使其色彩更融入整体风格 */
+    filter: grayscale(60%) contrast(1.1) sepia(10%);
+    transition: filter 0.3s ease;
+}
+
+/* 鼠标悬停时，照片恢复一点色彩 */
+.portrait-wrapper:hover .portrait-img {
+    filter: grayscale(0%) contrast(1) sepia(0%);
+}
+
+/* 4. 内层虚线装饰框 */
+.portrait-wrapper .guide-lines-box {
+    position: absolute;
+    /* 修改：定位到 padding 内部 */
+    top: 12px;
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+
+    /* 修改：使用强调色虚线 */
+    border: 1px dashed var(--accent-color);
+    z-index: 2;
+    pointer-events: none;
+    /* 新增：内部微弱发光 */
+    box-shadow: 0 0 15px rgba(0, 242, 255, 0.15) inset;
+    opacity: 0.7;
+}
+
+/* 5. 角标装饰 */
+.portrait-wrapper .corner-decor {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    z-index: 3;
+    transition: all 0.3s ease;
+}
+
+/* 左上角：发光的青色角标 */
+.portrait-wrapper .top-left {
+    top: -5px;
+    left: -5px;
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+/* 右下角：白色角标 */
+.portrait-wrapper .bottom-right {
+    bottom: -5px;
+    right: -5px;
+    background-color: var(--text-main);
+}
+
+/* 悬停时角标动效 */
+.portrait-wrapper:hover .top-left {
+    transform: translate(-3px, -3px) scale(1.1);
+}
+
+.portrait-wrapper:hover .bottom-right {
+    transform: translate(3px, 3px) scale(1.1);
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.section-title {
+    font-family: 'MyCustomTitleFont', sans-serif;
+    font-size: 2rem;
+    color: var(--text-main);
+    margin-bottom: 20px;
+    letter-spacing: 2px;
+}
+
+.bio-text {
+    font-size: 1rem;
+    line-height: 1.8;
+    color: var(--text-sub);
+    text-align: justify;
+}
+
+/* --- style.css: 技能列表升级 (Tech Chips) --- */
+
+.skill-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+
+    /* 改为弹性布局，自动换行 */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    /* 芯片之间的间距 */
+}
+
+.skill-list li {
+    position: relative;
+    padding: 8px 16px;
+
+    /* 边框和背景 */
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid #333;
+
+    /* 字体设置 */
+    color: var(--text-sub);
+    font-size: 0.9rem;
+    font-family: 'MyCustomBodyFont', monospace;
+    /* 等宽字体 */
+    letter-spacing: 1px;
+
+    cursor: default;
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* 切角效果 (右上角切一刀) */
+    clip-path: polygon(0 0,
+            100% 0,
+            100% 70%,
+            90% 100%,
+            0 100%);
+}
+
+/* 移除原来的伪元素小点 */
+.skill-list li::before {
+    display: none;
+}
+
+/* 悬停效果：变亮、发光、位移 */
+.skill-list li:hover {
+    background: rgba(0, 242, 255, 0.1);
+    border-color: var(--accent-color);
+    color: var(--text-main);
+    transform: translateY(-3px);
+    /* 微微上浮 */
+    box-shadow: 0 5px 15px rgba(0, 242, 255, 0.2);
+    text-shadow: 0 0 5px var(--accent-glow);
+}
+
+/* 加上一个小装饰条在左侧 */
+.skill-list li::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 2px;
+    height: 100%;
+    background-color: #555;
+    transition: background-color 0.3s;
+}
+
+.skill-list li:hover::after {
+    background-color: var(--accent-color);
+}
+
+.download-btn {
+    position: relative;
+    align-self: flex-end;
+    display: inline-flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px 30px;
+    margin-top: 50px;
+    background-color: #333;
+    color: var(--text-main);
+    text-decoration: none;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    border: 1px solid transparent;
+}
+
+.download-btn:hover {
+    background-color: #444;
+    border-color: var(--text-sub);
+}
+
+/* 下载按钮角标复用 */
+.corner-decor.top-left-small {
+    position: absolute;
+    top: -3px;
+    left: -3px;
+    width: 6px;
+    height: 6px;
+    background-color: var(--text-main);
+    z-index: 3;
+}
+
+.corner-decor.bottom-right-small {
+    position: absolute;
+    bottom: -3px;
+    right: -3px;
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent-color);
+    z-index: 3;
+    box-shadow: 0 0 5px var(--accent-glow);
+}
+
+
+/* =========================================
+   8. Works 页面样式 (3D Archive Shelf)
+   ========================================= */
+
+.works-main {
+    position: absolute;
+    top: 120px;
+    left: 0;
+    width: 100%;
+    height: calc(100vh - 180px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+}
+
+.archive-shelf {
+    display: flex;
+    gap: 15px;
+    padding: 50px;
+    height: 70vh;
+    align-items: center;
+    perspective: 1200px;
+    /* 3D透视 */
+}
+
+/* 档案盒 */
+.archive-file {
+    position: relative;
+    width: 70px;
+    height: 520px;
+    transform-style: preserve-3d;
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), margin 0.5s;
+    cursor: pointer;
+    z-index: 1;
+}
+
+/* 悬停交互：撑开右侧空间，防止鬼畜抽动 */
+.archive-file:hover {
+    z-index: 100;
+    margin-right: 340px;
+}
+
+/* 书脊 */
+.file-spine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 70px;
+    height: 100%;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    border-left: 2px solid #555;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 0;
+    transform: translateZ(35px);
+    /* 前推 */
+    z-index: 2;
+    box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
+    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+}
+
+/* 悬停时书脊上浮 */
+.archive-file.completed:hover .file-spine {
+    background-color: #ccc;
+    border-color: #fff;
+    transform: translateZ(25px) translateY(-30px);
+}
+
+/* 封面 (默认折叠) */
+.file-cover {
+    position: absolute;
+    top: 0;
+    left: 70px;
+    width: 360px;
+    height: 100%;
+    background-color: #000;
+    background-size: cover;
+    background-position: center;
+    border: 1px solid #333;
+    transform-origin: left center;
+    transform: rotateY(-90deg);
+    /* 折叠 */
+    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+    opacity: 0;
+    pointer-events: auto;
+    /* 允许鼠标移入封面 */
+}
+
+/* 悬停时展开封面 */
+.archive-file.completed:hover .file-cover {
+    transform: rotateY(0deg);
+    opacity: 1;
+    top: -30px;
+    /* 跟随书脊上浮 */
+}
+
+/* 文字与装饰 */
+.file-title {
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    color: #666;
+    font-size: 1.1rem;
+    letter-spacing: 3px;
+    font-family: 'Courier New', sans-serif;
+    text-transform: uppercase;
+    transition: color 0.3s;
+}
+
+.file-code {
+    font-size: 0.7rem;
+    color: #444;
+    font-family: 'Courier New', monospace;
+    transform: rotate(-90deg);
+}
+
+.file-status-light {
+    width: 6px;
+    height: 6px;
+    background-color: #333;
+    border-radius: 50%;
+}
+
+.archive-file.completed:hover .file-title {
+    color: #000;
+    font-weight: bold;
+}
+
+.archive-file.completed:hover .file-status-light {
+    background-color: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-glow);
+}
+
+.cover-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    font-size: 1.2rem;
+    opacity: 0;
+    transform: translateX(-20px);
+    transition: all 0.4s ease 0.1s;
+}
+
+.archive-file.completed:hover .cover-overlay {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+
+/* --- 未完成 (Incomplete) 样式 --- */
+.archive-file.incomplete {
+    cursor: not-allowed;
+}
+
+.archive-file.incomplete .file-cover {
+    filter: grayscale(100%) contrast(1.2) brightness(0.6);
+}
+
+.archive-file.incomplete:hover .file-cover {
+    transform: rotateY(0deg);
+    opacity: 0.8;
+}
+
+.archive-file.incomplete:hover .cover-overlay {
+    background: rgba(50, 0, 0, 0.8);
+    color: #ff3333;
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.archive-file.incomplete:hover .file-spine {
+    border-color: #500;
+    box-shadow: 0 0 10px rgba(255, 0, 0, 0.2);
+}
+
+.file-status-light.error {
+    background-color: #500;
+}
+
+.archive-file.incomplete:hover .file-status-light.error {
+    background-color: red;
+    box-shadow: 0 0 8px red;
+    animation: blink 0.2s infinite;
+}
+
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.3;
+    }
+
+    100% {
+        opacity: 1;
+    }
+}
+
+.lock-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 1.5rem;
+    opacity: 0.5;
+}
+
+/* --- 重构版：档案详情层 (Archive Detail Overlay) --- */
+
+.work-detail-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(10, 10, 10, 0.95);
+    /* 深色背景，略透 */
+    backdrop-filter: blur(10px);
+    z-index: 200;
+
+    /* 动画：像老电视关机一样的横向展开 */
+    clip-path: inset(50% 0 50% 0);
+    transition: clip-path 0.6s cubic-bezier(0.7, 0, 0.3, 1);
+
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    /* 移除内边距，让顶栏贴边 */
+}
+
+.work-detail-overlay.active {
+    clip-path: inset(0 0 0 0);
+    /* 展开 */
+}
+
+/* 1. 顶部工具栏 */
+.detail-top-bar {
+    width: 100%;
+    height: 50px;
+    border-bottom: 1px solid #333;
+    background: #111;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 30px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    color: #666;
+}
+
+.file-id-tag span {
+    color: var(--accent-color);
+}
+
+.close-detail-btn {
+    background: none;
+    border: 1px solid #444;
+    color: var(--text-sub);
+    padding: 5px 15px;
+    cursor: pointer;
+    font-family: inherit;
+    transition: all 0.3s;
+}
+
+.close-detail-btn:hover {
+    background: var(--accent-color);
+    color: #000;
+    border-color: var(--accent-color);
+}
+
+/* 2. 核心布局 (Grid) */
+.archive-layout {
+    flex: 1;
+    /* 占满剩余高度 */
+    display: grid;
+    grid-template-columns: 4fr 6fr;
+    /* 左4右6 */
+    width: 100%;
+    max-width: 1400px;
+    margin: 0 auto;
+    height: 100%;
+    overflow: hidden;
+    /* 防止双滚动条 */
+}
+
+/* --- 左侧：视觉区 --- */
+.archive-left-col {
+    padding: 40px;
+    border-right: 1px dashed #333;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    background-image: radial-gradient(#222 1px, transparent 1px);
+    background-size: 20px 20px;
+    /* 点阵背景 */
+}
+
+.evidence-frame {
+    position: relative;
+    padding: 10px;
+    border: 1px solid #444;
+}
+
+/* 四个角的装饰标 */
+.corner-mark {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    border-color: var(--accent-color);
+    border-style: solid;
+}
+
+.tl {
+    top: -1px;
+    left: -1px;
+    border-width: 2px 0 0 2px;
+}
+
+.tr {
+    top: -1px;
+    right: -1px;
+    border-width: 2px 2px 0 0;
+}
+
+.bl {
+    bottom: -1px;
+    left: -1px;
+    border-width: 0 0 2px 2px;
+}
+
+.br {
+    bottom: -1px;
+    right: -1px;
+    border-width: 0 2px 2px 0;
+}
+
+.detail-img {
+    width: 100%;
+    display: block;
+    filter: grayscale(20%) contrast(1.1);
+    /* 稍微做旧一点 */
+}
+
+.img-caption {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    color: #555;
+    margin-top: 5px;
+    text-align: right;
+}
+
+/* 装饰：纯CSS画的条形码 */
+.barcode-box {
+    margin-top: auto;
+    opacity: 0.5;
+}
+
+.barcode {
+    height: 30px;
+    width: 150px;
+    background: repeating-linear-gradient(90deg,
+            #fff 0px, #fff 2px,
+            transparent 2px, transparent 4px,
+            #fff 4px, #fff 5px,
+            transparent 5px, transparent 9px);
+}
+
+.serial-num {
+    font-family: 'Courier New', monospace;
+    font-size: 0.7rem;
+    margin-top: 5px;
+}
+
+
+/* --- 右侧：报告区 --- */
+.archive-right-col {
+    padding: 60px;
+    overflow-y: auto;
+    /* 文字太长可以滚动 */
+    display: flex;
+    flex-direction: column;
+}
+
+.report-header {
+    border-bottom: 2px solid var(--text-main);
+    padding-bottom: 20px;
+    margin-bottom: 30px;
+}
+
+.detail-title {
+    font-family: 'MyCustomTitleFont', sans-serif;
+    font-size: 3.5rem;
+    color: var(--text-main);
+    line-height: 1;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
+.meta-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    border-top: 1px solid #333;
+    padding-top: 10px;
+}
+
+.meta-item .label {
+    color: #555;
+    display: block;
+    font-size: 0.7rem;
+    margin-bottom: 5px;
+}
+
+.meta-item .value {
+    color: var(--accent-color);
+}
+
+.report-body {
+    flex: 1;
+}
+
+.body-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.detail-body p {
+    font-family: 'MyCustomBodyFont', sans-serif;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: #ccc;
+    margin-bottom: 20px;
+}
+
+/* 底部印章 */
+.report-footer {
+    margin-top: 50px;
+    padding-top: 20px;
+    border-top: 1px dashed #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.stamp-box {
+    border: 2px solid #444;
+    color: #444;
+    padding: 5px 15px;
+    font-weight: bold;
+    font-family: 'Courier New', monospace;
+    letter-spacing: 2px;
+    transform: rotate(-5deg);
+    /* 盖章是歪的 */
+    opacity: 0.5;
+}
+
+.footer-note {
+    font-family: 'Courier New', monospace;
+    color: #333;
+    font-size: 0.8rem;
+}
+
+
+/* =========================================
+   9. Contact Modal & Animations
+   ========================================= */
+
+/* Contact Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(5px);
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.4s ease;
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.modal-card {
+    position: relative;
+    width: 400px;
+    padding: 40px;
+    background: rgba(20, 20, 20, 0.9);
+    border: 1px solid #333;
+    box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+    transform: scale(0.9);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.modal-overlay.active .modal-card {
+    transform: scale(1);
+}
+
+.modal-header {
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.modal-desc {
+    font-size: 0.9rem;
+    color: var(--text-sub);
+    margin-bottom: 25px;
+    line-height: 1.6;
+}
+
+.email-box {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 15px;
+    border: 1px dashed #444;
+    transition: border-color 0.3s;
+}
+
+.email-box:hover {
+    border-color: var(--accent-color);
+}
+
+#emailText {
+    font-family: 'Courier New', monospace;
+    color: var(--text-main);
+    font-size: 1rem;
+}
+
+.copy-btn {
+    background: transparent;
+    border: 1px solid var(--text-sub);
+    color: var(--text-sub);
+    padding: 5px 12px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-family: inherit;
+}
+
+.copy-btn:hover {
+    border-color: var(--accent-color);
+    color: var(--accent-color);
+    box-shadow: 0 0 8px var(--accent-glow);
+}
+
+.close-modal-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: none;
+    border: none;
+    color: var(--text-sub);
+    font-size: 1.5rem;
+    cursor: pointer;
+    line-height: 1;
+    transition: color 0.3s;
+}
+
+.close-modal-btn:hover {
+    color: var(--text-main);
+}
+
+.modal-deco-line {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: var(--accent-color);
+    transition: width 0.6s ease 0.2s;
+}
+
+.modal-overlay.active .modal-deco-line {
+    width: 100%;
+}
+
+/* 通用动画 Keyframes */
+@keyframes scroll-x {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+@keyframes scroll-vertical {
+    0% {
+        transform: translateY(0);
+    }
+
+    100% {
+        transform: translateY(-50%);
+    }
+}
+
+@keyframes scroll-vertical-reverse {
+    0% {
+        transform: translateY(-50%);
+    }
+
+    100% {
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(0, 242, 255, 0);
+    }
+
+    50% {
+        transform: scale(1.2);
+        box-shadow: 0 0 15px var(--accent-glow);
+    }
+
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(0, 242, 255, 0);
+    }
+}
+
+/* =========================================
+   10. Custom Cursor (自定义光标)
+   ========================================= */
+
+/* 1. 隐藏系统默认光标 (针对所有元素) */
+* {
+    cursor: none !important;
+}
+
+/* 2. 光标核心 (小实心点) */
+.cursor-dot {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 6px;
+    height: 6px;
+    background-color: var(--accent-color);
+    /* 青色 */
+    border-radius: 50%;
+    z-index: 9999;
+    pointer-events: none;
+    /* 让鼠标事件穿透光标，点到下面的东西 */
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, background-color 0.3s;
+    box-shadow: 0 0 5px var(--accent-glow);
+}
+
+/* 3. 光标外圈 (大空心圆 - 稍微延迟跟随) */
+.cursor-circle {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 30px;
+    height: 30px;
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    border-radius: 50%;
+    z-index: 9998;
+    /* 在小点下面 */
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s, height 0.3s, border-color 0.3s, background-color 0.3s;
+}
+
+/* --- 交互状态：Hover 到可点击物体时 --- */
+
+/* 定义一个类名，JS 会控制加上这个类 */
+body.hovering .cursor-dot {
+    width: 10px;
+    height: 10px;
+    background-color: #fff;
+    /* 变白 */
+    box-shadow: 0 0 0 transparent;
+    /* 去掉发光 */
+}
+
+body.hovering .cursor-circle {
+    width: 50px;
+    height: 50px;
+    /* 变大 */
+    border-color: var(--accent-color);
+    /* 变青色 */
+    background-color: rgba(0, 242, 255, 0.1);
+    /* 稍微带点背景色 */
+    border-width: 2px;
+}
+
+/* 特殊：针对 Works 档案盒 Hover 时的状态 (变成扫描框) */
+body.hovering-archive .cursor-circle {
+    border-radius: 4px;
+    /* 变方 */
+    width: 60px;
+    height: 60px;
+    border: 1px dashed var(--accent-color);
+    background-color: transparent;
+    animation: rotate-cursor 4s linear infinite;
+    /* 缓慢旋转 */
+}
+
+@keyframes rotate-cursor {
+    0% {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    100% {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+
+/* =========================================
+   11. Preloader (几何方块版)
+   ========================================= */
+
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: var(--bg-color);
+    z-index: 99999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.8s ease;
+    /* 淡出动画 */
+}
+
+.loader-content-geometry {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    /* 方块和文字的间距 */
+}
+
+/* --- 核心几何体容器 --- */
+.loader-box-wrapper {
+    position: relative;
+    width: 120px;
+    /* 定义方框的最大尺寸 */
+    height: 120px;
+}
+
+/* 1. 外层虚线方框 */
+.outer-dashed-box {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    border: 2px dashed #444;
+    /* 深灰色虚线 */
+    box-sizing: border-box;
+    /* 让外框缓慢旋转，增加扫描感 */
+    animation: slow-rotate 12s linear infinite;
+}
+
+/* 2. 内层实心方框 */
+.inner-solid-box {
+    position: absolute;
+    /* 初始定位在中心 */
+    top: 50%;
+    left: 50%;
+    /* 基础尺寸设为100%，后面用 scale(0) 到 scale(1) 来控制大小 */
+    width: 100%;
+    height: 100%;
+    background-color: var(--accent-color);
+    /* 青色填充 */
+    box-shadow: 0 0 20px var(--accent-glow);
+    /* 发光 */
+
+    /* 核心：初始状态缩放为 0，并且要保持居中定位 */
+    transform: translate(-50%, -50%) scale(0);
+    transform-origin: center center;
+
+    /* 进度变化时的平滑过渡 */
+    transition: transform 0.1s linear;
+
+    /* 用于居中内部的文字 */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* 3. 百分比文字 */
+#loaderPercent {
+    color: #000;
+    /* 在青色背景上用黑色文字对比度最高 */
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.5rem;
+    /* 文字稍微有些故障感的微动 */
+    animation: text-glitch 0.5s infinite alternate;
+}
+
+/* --- 底部文字组 --- */
+.loader-text-group {
+    text-align: center;
+    font-family: 'Courier New', monospace;
+}
+
+.loader-title {
+    color: var(--text-main);
+    font-size: 0.9rem;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    opacity: 0.8;
+}
+
+.loader-status {
+    color: var(--text-sub);
+    font-size: 0.7rem;
+    animation: blink 1s infinite;
+}
+
+/* --- 动画定义 --- */
+@keyframes slow-rotate {
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
+@keyframes text-glitch {
+    0% {
+        opacity: 1;
+        transform: skewX(0deg);
+    }
+
+    100% {
+        opacity: 0.8;
+        transform: skewX(-2deg);
+    }
+}
+
+/* --- Glitch Title Effect (故障标题) --- */
+
+.section-title {
+    position: relative;
+    /* 保持原有的字体设置，这里只需要加 position */
+}
+
+/* 悬停时触发故障 (或者你可以让它一直触发) */
+.info-block:hover .section-title {
+    animation: glitch-skew 1s cubic-bezier(0.25, 0.46, 0.45, 0.94) both infinite;
+    color: var(--text-main);
+}
+
+.info-block:hover .section-title::before,
+.info-block:hover .section-title::after {
+    content: attr(data-text);
+    /* 这一步很重要，需要HTML配合 */
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--bg-color);
+    /* 遮挡背景 */
+}
+
+.info-block:hover .section-title::before {
+    left: 2px;
+    text-shadow: -1px 0 #ff00c1;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim-1 5s infinite linear alternate-reverse;
+}
+
+.info-block:hover .section-title::after {
+    left: -2px;
+    text-shadow: -1px 0 #00fff9;
+    clip: rect(44px, 450px, 56px, 0);
+    animation: glitch-anim-2 5s infinite linear alternate-reverse;
+}
+
+/* 故障动画关键帧 */
+@keyframes glitch-anim-1 {
+    0% {
+        clip: rect(30px, 9999px, 10px, 0);
+    }
+
+    20% {
+        clip: rect(60px, 9999px, 80px, 0);
+    }
+
+    40% {
+        clip: rect(10px, 9999px, 50px, 0);
+    }
+
+    60% {
+        clip: rect(80px, 9999px, 100px, 0);
+    }
+
+    80% {
+        clip: rect(40px, 9999px, 20px, 0);
+    }
+
+    100% {
+        clip: rect(70px, 9999px, 90px, 0);
+    }
+}
+
+@keyframes glitch-anim-2 {
+    0% {
+        clip: rect(10px, 9999px, 30px, 0);
+    }
+
+    20% {
+        clip: rect(80px, 9999px, 60px, 0);
+    }
+
+    40% {
+        clip: rect(50px, 9999px, 10px, 0);
+    }
+
+    60% {
+        clip: rect(100px, 9999px, 80px, 0);
+    }
+
+    80% {
+        clip: rect(20px, 9999px, 40px, 0);
+    }
+
+    100% {
+        clip: rect(90px, 9999px, 70px, 0);
+    }
+}
+
+@keyframes glitch-skew {
+    0% {
+        transform: skew(0deg);
+    }
+
+    10% {
+        transform: skew(-2deg);
+    }
+
+    20% {
+        transform: skew(2deg);
+    }
+
+    30% {
+        transform: skew(0deg);
+    }
+
+    100% {
+        transform: skew(0deg);
+    }
+}

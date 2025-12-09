@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - JessieWu's Archive</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="cursor-dot" id="cursorDot"></div>
+    <div class="cursor-circle" id="cursorCircle"></div>
+    <div class="dash-line top-scroll"></div>
+    <div class="header-bg" style="opacity: 1;"></div>
+    <div class="dash-line header-bottom-static" style="opacity: 1;"></div>
+    <div class="dash-line bottom-scroll"></div>
+    <div class="square top-left"></div>
+    <div class="square bottom-right"></div>
+
+    <div class="intro-container moved static-mode">
+        <div class="main-title">JessieWu’s Incomplete Archive</div>
+    </div>
+
+    <nav class="nav-menu" id="navMenu" style="opacity: 1;">
+        <a href="index.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Home</div>
+                <div class="nav-face nav-back">Home</div>
+            </div>
+        </a>
+        <a href="about.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">About</div>
+                <div class="nav-face nav-back">About</div>
+            </div>
+        </a>
+        <a href="works.html" class="nav-item transition-link">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Works</div>
+                <div class="nav-face nav-back">Works</div>
+            </div>
+        </a>
+        <a href="#" class="nav-item" id="contactBtn">
+            <div class="nav-flipper">
+                <div class="nav-face nav-front">Contact</div>
+                <div class="nav-face nav-back">Contact</div>
+            </div>
+        </a>
+    </nav>
+
+    <main class="about-main">
+        <div class="portrait-wrapper">
+            <div class="corner-decor top-left"></div>
+            <div class="portrait-img"></div>
+            <div class="guide-lines-box">
+                <div class="corner-decor bottom-right"></div>
+            </div>
+        </div>
+
+        <div class="info-wrapper">
+
+            <section class="info-block">
+                <h2 class="section-title" data-text="About me">About Me</h2>
+                <p class="bio-text">
+                    一些自我介绍文字还没想好写什么就先这样吧，一些自我介绍文字还没想好写什么就先这样吧。
+                    <br>
+                    一些自我介绍文字; 还没想好写什么; 就先这样吧。
+                    <br><br>
+                </p>
+            </section>
+
+            <section class="info-block">
+                <h2 class="section-title" data-text="Skills">Skills</h2>
+                <ul class="skill-list">
+                    <li>3D建模与渲染</li>
+                    <li>平面设计</li>
+                    <li>视频剪辑与后期</li>
+                    <li>动效制作</li>
+                    <li>游戏引擎</li>
+                    <li>代码</li>
+                </ul>
+            </section>
+
+            <a href="#" class="download-btn">
+                <div class="corner-decor top-left-small"></div>
+                <span>点击下载作品集 PDF</span>
+                <div class="corner-decor bottom-right-small"></div>
+            </a>
+
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="contactModal">
+        <div class="modal-card">
+            <button class="close-modal-btn" id="closeModal">×</button>
+            <div class="modal-header">CONNECTION REQUEST</div>
+            <div class="modal-body">
+                <p class="modal-desc">您可以写信给我，期待您的来信。</p>
+                <div class="email-box">
+                    <span id="emailText">jessiewu327@qq.com</span>
+                    <button class="copy-btn" id="copyBtn">COPY</button>
+                </div>
+            </div>
+            <div class="modal-deco-line"></div>
+        </div>
+    </div>
+
+    <script src="transition.js"></script>
+    <script src="cursor.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // About 页只需要 Contact 弹窗逻辑
+            // 不需要 Header 出现的动画逻辑了，因为我们直接在 HTML 里写了 opacity: 1
+            const contactBtn = document.getElementById('contactBtn');
+            const contactModal = document.getElementById('contactModal');
+            const closeModalBtn = document.getElementById('closeModal');
+            const copyBtn = document.getElementById('copyBtn');
+            const emailText = document.getElementById('emailText');
+
+            if (contactBtn) {
+                contactBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    contactModal.classList.add('active');
+                });
+            }
+            if (closeModalBtn) {
+                closeModalBtn.addEventListener('click', () => {
+                    contactModal.classList.remove('active');
+                });
+            }
+            if (contactModal) {
+                contactModal.addEventListener('click', (e) => {
+                    if (e.target === contactModal) contactModal.classList.remove('active');
+                });
+            }
+            if (copyBtn) {
+                copyBtn.addEventListener('click', () => {
+                    // ... 复制逻辑不变 ...
+                    const email = emailText.innerText;
+                    navigator.clipboard.writeText(email).then(() => {
+                        const originalText = copyBtn.innerText;
+                        copyBtn.innerText = "COPIED!";
+                        copyBtn.style.borderColor = "var(--accent-color)";
+                        copyBtn.style.color = "var(--accent-color)";
+                        setTimeout(() => {
+                            copyBtn.innerText = originalText;
+                            copyBtn.style.borderColor = "";
+                            copyBtn.style.color = "";
+                        }, 2000);
+                    });
+                });
+            }
+        });
+    </script>
+</body>
+
+</html>
