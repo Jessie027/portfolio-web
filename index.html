@@ -125,53 +125,14 @@
     <script src="cursor.js"></script>
 
     <script>
+        /* --- index.html 底部 script 完全替换 --- */
+
         document.addEventListener('DOMContentLoaded', () => {
-            // ==================== [修改] Loading 逻辑 START ====================
 
             const preloader = document.getElementById('preloader');
-            // 获取新的元素：实心框
-            const innerBox = document.getElementById('innerBox');
-            const loaderPercent = document.getElementById('loaderPercent');
 
-            let progress = 0;
-
-            // 为了让动画更有看头，我们把模拟加载的时间稍微调慢一点点
-            const timer = setInterval(() => {
-                // 每次增加少一点，让过程更平滑
-                progress += Math.random() * 2;
-
-                if (progress > 100) progress = 100;
-
-                // --- 核心变化 ---
-                // 计算缩放比例：0% 对应 scale(0)，100% 对应 scale(1)
-                const scaleValue = progress / 100;
-
-                // 应用样式：保持居中定位的同时，设置缩放
-                innerBox.style.transform = `translate(-50%, -50%) scale(${scaleValue})`;
-
-                // 更新数字
-                loaderPercent.innerText = Math.floor(progress) + '%';
-
-                if (progress === 100) {
-                    clearInterval(timer);
-
-                    // 加载完成，停留一小会儿展示完整方块
-                    setTimeout(() => {
-                        // 淡出 Loading
-                        preloader.style.opacity = '0';
-                        preloader.style.pointerEvents = 'none';
-
-                        // 开始主页动画
-                        startHomeAnimations();
-                    }, 800); // 稍微多停留一下，欣赏一下完成态
-                }
-            }, 30); // 更新频率加快，更丝滑
-
-            // ==================== [修改] Loading 逻辑 END ====================
-
-
-            // 把原来的动画逻辑封装成一个函数
-            function startHomeAnimations() {
+            // 1. 定义开场动画流程 (这是你要保留的动效)
+            function playHomeIntro() {
                 const introBox = document.getElementById('introBox');
                 const mainTitle = introBox.querySelector('.main-title');
                 const subtitle = introBox.querySelector('.subtitle');
@@ -180,17 +141,21 @@
                 const headerBg = document.getElementById('headerBg');
                 const staticLine = document.getElementById('staticLine');
 
-                // 1. 大标题淡入
-                setTimeout(() => {
-                    mainTitle.style.opacity = "1";
-                }, 500);
+                // A. 初始状态重置 (防止二次进入时状态不对)
+                // 确保标题是大且透明的，副标题也是透明的
+                mainTitle.style.opacity = "0";
+                subtitle.style.opacity = "0";
+                introBox.classList.remove('moved');
 
-                // 2. 小标题淡入
-                setTimeout(() => {
-                    subtitle.style.opacity = "1";
-                }, 1500);
+                // B. 开始播放动画序列
 
-                // 3. Header 形成
+                // 0.5秒后：大标题淡入
+                setTimeout(() => { mainTitle.style.opacity = "1"; }, 500);
+
+                // 1.5秒后：副标题淡入
+                setTimeout(() => { subtitle.style.opacity = "1"; }, 1500);
+
+                // 3.0秒后：Header 形成 (标题变小移位、副标题消失、导航栏出现)
                 setTimeout(() => {
                     introBox.classList.add('moved');
                     headerBg.style.opacity = "1";
@@ -198,24 +163,58 @@
                     navMenu.style.opacity = "1";
                 }, 3000);
 
-                // 4. 内容淡入
-                setTimeout(() => {
-                    mainContent.classList.add('fade-in');
-                }, 4000);
+                // 4.0秒后：内容淡入
+                setTimeout(() => { mainContent.classList.add('fade-in'); }, 4000);
+            }
+
+            // 2. 检查是否第一次访问
+            const hasVisited = sessionStorage.getItem('hasVisited');
+
+            if (!hasVisited) {
+                // === 情况 A: 第一次访问 (跑 Loading) ===
+                sessionStorage.setItem('hasVisited', 'true');
+
+                // Loading 动画逻辑
+                const innerBox = document.getElementById('innerBox');
+                const loaderPercent = document.getElementById('loaderPercent');
+                let progress = 0;
+
+                const timer = setInterval(() => {
+                    progress += Math.random() * 2;
+                    if (progress > 100) progress = 100;
+                    const scaleValue = progress / 100;
+                    if (innerBox) innerBox.style.transform = `translate(-50%, -50%) scale(${scaleValue})`;
+                    if (loaderPercent) loaderPercent.innerText = Math.floor(progress) + '%';
+
+                    if (progress === 100) {
+                        clearInterval(timer);
+                        setTimeout(() => {
+                            // 淡出 Loading
+                            preloader.style.opacity = '0';
+                            preloader.style.pointerEvents = 'none';
+                            // 播放开场动画
+                            playHomeIntro();
+                        }, 800);
+                    }
+                }, 30);
+
+            } else {
+                // === 情况 B: 回头客 (跳过 Loading，但保留开场动画) ===
+                preloader.style.display = 'none'; // 瞬间关掉 Loading
+
+                // 直接播放开场动画
+                playHomeIntro();
             }
 
 
-            // --- 其他点击逻辑 (保持不变) ---
-
+            // --- 其他逻辑 (保持不变) ---
             const centerStage = document.querySelector('.center-stage-wrapper');
             const mainContent = document.getElementById('mainContent');
             if (centerStage) {
                 centerStage.style.cursor = 'pointer';
                 centerStage.addEventListener('click', () => {
                     if (mainContent) mainContent.classList.remove('fade-in');
-                    setTimeout(() => {
-                        window.location.href = 'works.html?open=work1';
-                    }, 400);
+                    setTimeout(() => { window.location.href = 'works.html?open=work1'; }, 400);
                 });
             }
 
@@ -224,16 +223,9 @@
             const closeModalBtn = document.getElementById('closeModal');
             const copyBtn = document.getElementById('copyBtn');
             const emailText = document.getElementById('emailText');
-
-            if (contactBtn) {
-                contactBtn.addEventListener('click', (e) => { e.preventDefault(); contactModal.classList.add('active'); });
-            }
-            if (closeModalBtn) {
-                closeModalBtn.addEventListener('click', () => { contactModal.classList.remove('active'); });
-            }
-            if (contactModal) {
-                contactModal.addEventListener('click', (e) => { if (e.target === contactModal) contactModal.classList.remove('active'); });
-            }
+            if (contactBtn) { contactBtn.addEventListener('click', (e) => { e.preventDefault(); contactModal.classList.add('active'); }); }
+            if (closeModalBtn) { closeModalBtn.addEventListener('click', () => { contactModal.classList.remove('active'); }); }
+            if (contactModal) { contactModal.addEventListener('click', (e) => { if (e.target === contactModal) contactModal.classList.remove('active'); }); }
             if (copyBtn) {
                 copyBtn.addEventListener('click', () => {
                     const email = emailText.innerText;

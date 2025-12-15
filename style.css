@@ -783,7 +783,7 @@ main.fade-in {
     width: 70px;
     height: 520px;
     transform-style: preserve-3d;
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), margin 0.5s;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), margin 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     cursor: pointer;
     z-index: 1;
 }
@@ -813,7 +813,7 @@ main.fade-in {
     /* 前推 */
     z-index: 2;
     box-shadow: -5px 0 15px rgba(0, 0, 0, 0.5);
-    transition: transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1), background-color 0.3s;
 }
 
 /* 悬停时书脊上浮 */
@@ -837,7 +837,7 @@ main.fade-in {
     transform-origin: left center;
     transform: rotateY(-90deg);
     /* 折叠 */
-    transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.3s;
+    transition: transform 0.9s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.5s;
     opacity: 0;
     pointer-events: auto;
     /* 允许鼠标移入封面 */
@@ -999,38 +999,75 @@ main.fade-in {
 }
 
 /* 1. 顶部工具栏 */
+/* --- 修改 Works 详情页顶栏 --- */
+
+/* 1. 给顶栏加上相对定位，作为坐标基准 */
 .detail-top-bar {
+    position: relative;
+    /* 新增这一行 */
     width: 100%;
     height: 50px;
     border-bottom: 1px solid #333;
     background: #111;
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    /* 垂直居中 */
+    /* justify-content 可以删掉或者改为 flex-start */
     padding: 0 30px;
     font-family: 'Courier New', monospace;
     font-size: 0.9rem;
     color: #666;
 }
 
-.file-id-tag span {
-    color: var(--accent-color);
-}
+/* 3. 中间的 STATUS：使用绝对定位强制居中 */
+.file-status-tag {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    /* 经典的绝对定位居中法 */
 
-.close-detail-btn {
-    background: none;
-    border: 1px solid #444;
     color: var(--text-sub);
-    padding: 5px 15px;
-    cursor: pointer;
-    font-family: inherit;
-    transition: all 0.3s;
+    letter-spacing: 1px;
 }
 
-.close-detail-btn:hover {
+/* --- 升级版关闭按钮 --- */
+.close-detail-btn {
+    position: fixed;
+    /* 强制固定在窗口，不管怎么滚动都在 */
+    top: 30px;
+    right: 40px;
+    z-index: 210;
+    /* 确保在最最上层 */
+
+    /* 样式大改：实心背景 */
     background: var(--accent-color);
+    /* 用你的主题青色 */
     color: #000;
-    border-color: var(--accent-color);
+    /* 黑色文字，对比度最高 */
+    border: none;
+
+    padding: 12px 24px;
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    letter-spacing: 1px;
+    cursor: pointer;
+
+    /* 加上阴影，像一个实体按钮 */
+    box-shadow: 0 0 15px var(--accent-glow);
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* 切角设计 (可选，增加科技感) */
+    clip-path: polygon(10% 0, 100% 0, 100% 70%, 90% 100%, 0 100%, 0 30%);
+}
+
+/* 悬停效果：变成警示红或者变白 */
+.close-detail-btn:hover {
+    background: #fff;
+    color: #000;
+    transform: scale(1.05);
+    /* 微微放大 */
+    box-shadow: 0 0 25px rgba(255, 255, 255, 0.5);
 }
 
 /* 2. 核心布局 (Grid) */
