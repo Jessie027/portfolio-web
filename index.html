@@ -9,7 +9,13 @@
 </head>
 
 <body>
-
+    <script>
+        // 这段代码会阻断渲染，在显示任何东西前先执行
+        // 如果发现来过，立刻给 body 加上 skip-loading 类
+        if (sessionStorage.getItem('hasVisited')) {
+            document.body.classList.add('skip-loading');
+        }
+    </script>
     <div id="preloader">
         <div class="loader-content-geometry">
             <div class="loader-box-wrapper">
@@ -168,9 +174,22 @@
             }
 
             // 2. 检查是否第一次访问
+            // 2. 检查是否第一次访问
             const hasVisited = sessionStorage.getItem('hasVisited');
 
-            if (!hasVisited) {
+            // 【修改重点】：增加了 document.body.classList.contains('skip-loading') 的判断
+            // 只要 body 上有 skip-loading 类，或者 sessionStorage 里有记录，就当作回头客处理
+            if (document.body.classList.contains('skip-loading') || hasVisited) {
+
+                // === 情况 B: 回头客 (跳过 Loading) ===
+                // 虽然 CSS 已经强制隐藏了，这里再保险关一次
+                preloader.style.display = 'none';
+
+                // 直接播放开场动画
+                playHomeIntro();
+
+            } else {
+
                 // === 情况 A: 第一次访问 (跑 Loading) ===
                 sessionStorage.setItem('hasVisited', 'true');
 
@@ -197,13 +216,6 @@
                         }, 800);
                     }
                 }, 30);
-
-            } else {
-                // === 情况 B: 回头客 (跳过 Loading，但保留开场动画) ===
-                preloader.style.display = 'none'; // 瞬间关掉 Loading
-
-                // 直接播放开场动画
-                playHomeIntro();
             }
 
 
