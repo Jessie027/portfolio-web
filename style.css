@@ -166,7 +166,7 @@ main.fade-in {
 }
 
 .main-title {
-    font-family: 'MyCustomTitleFont', sans-serif;
+    font-family: 'Courier New', monospace;
     font-size: 3rem;
     /* 初始字号固定 */
     font-weight: normal;
@@ -620,7 +620,7 @@ main.fade-in {
 }
 
 .section-title {
-    font-family: 'MyCustomTitleFont', sans-serif;
+    font-family: 'Courier New', monospace;
     font-size: 2rem;
     color: var(--text-main);
     margin-bottom: 20px;
@@ -858,7 +858,7 @@ main.fade-in {
     color: #666;
     font-size: 1.1rem;
     letter-spacing: 3px;
-    font-family: 'Courier New', sans-serif;
+    font-family: 'Courier New', monospace;
     text-transform: uppercase;
     transition: color 0.3s;
 }
@@ -1191,7 +1191,7 @@ main.fade-in {
 }
 
 .detail-title {
-    font-family: 'MyCustomTitleFont', sans-serif;
+    font-family: 'Courier New', monospace;
     font-size: 3.5rem;
     color: var(--text-main);
     line-height: 1;
@@ -1779,4 +1779,362 @@ body.skip-loading #preloader {
     visibility: hidden !important;
     opacity: 0 !important;
     z-index: -999 !important;
+}
+
+/* --- 作品外链按钮样式 --- */
+.archive-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    background: rgba(0, 0, 0, 0.6);
+    color: #fff;
+    text-decoration: none;
+    font-family: monospace;
+    font-size: 0.85rem;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.archive-btn .icon {
+    color: var(--accent-color);
+    /* 你的青色主题色 */
+    font-weight: bold;
+}
+
+.archive-btn:hover {
+    border-color: var(--accent-color);
+    background: rgba(0, 255, 255, 0.1);
+    box-shadow: 0 0 15px rgba(0, 255, 255, 0.2);
+    transform: translateY(-2px);
+}
+
+/* --- 翻页按钮美化 (Tactical Style) --- */
+
+.nav-arrow-btn {
+    /* 1. 基础结构 */
+    appearance: none;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    /* 默认是很暗的边框 */
+    background: rgba(0, 0, 0, 0.6);
+    /* 半透明黑底 */
+    color: #888;
+    /* 默认文字灰色 */
+
+    /* 2. 字体与排版 */
+    font-family: 'Courier New', Courier, monospace;
+    /* 强制代码字体 */
+    font-size: 0.85rem;
+    font-weight: bold;
+    letter-spacing: 1px;
+    /* 字间距拉开，更像指令 */
+
+    /* 3. 尺寸与间距 */
+    padding: 8px 16px;
+    min-width: 100px;
+    /* 统宽度，显得整齐 */
+    cursor: pointer;
+
+    /* 4. 动画过渡 */
+    transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    /* 5. 装饰：为了不让它太单调，可以加一点外边距 */
+    margin: 0;
+}
+
+/* --- 鼠标悬停 (激活状态) --- */
+.nav-arrow-btn:hover:not(.disabled) {
+    border-color: var(--accent-color);
+    /* 边框变青色 */
+    color: #fff;
+    /* 文字变白 */
+    background: rgba(0, 240, 255, 0.1);
+    /* 背景泛起淡淡的青光 */
+    box-shadow: 0 0 10px rgba(0, 240, 255, 0.2);
+    /* 外部发光 */
+    transform: translateY(-1px);
+    /* 微微上浮 */
+}
+
+/* --- 鼠标点击 (按压状态) --- */
+.nav-arrow-btn:active:not(.disabled) {
+    transform: translateY(1px);
+    /* 按下去 */
+    background: rgba(0, 240, 255, 0.2);
+}
+
+/* --- 禁用状态 (不可点击) --- */
+.nav-arrow-btn.disabled {
+    border-color: rgba(255, 255, 255, 0.05);
+    /* 边框几乎消失 */
+    color: rgba(255, 255, 255, 0.1);
+    /* 文字非常暗 */
+    background: transparent;
+    cursor: not-allowed;
+    /* 鼠标变成禁止符号 */
+    pointer-events: none;
+    /* 禁止一切交互 */
+}
+
+/* --- 过程图样式 (Static / 静态展示) --- */
+.process-thumb {
+    width: 100%;
+    /* 宽度占满容器 */
+    height: auto;
+    /* 高度按比例自适应 */
+    display: block;
+    /* 消除底部间隙 */
+
+    /* 仅保留一个极淡的边框，用来区分图片和黑色背景 */
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    /* 确保图片是原本的样子：不透明、无滤镜 */
+    opacity: 1;
+    filter: none;
+
+    /* 鼠标放上去不需要变成手型，因为不能点击了 */
+    cursor: default;
+
+    /*以此往下，原本的 transition, hover 等代码全部删掉 */
+}
+
+
+/* =========================================
+   PAGE 2: SYSTEM DATA 美化样式
+   ========================================= */
+
+/* 1. 容器布局：让标签自动换行，并且有呼吸感 */
+.tech-tags-container,
+.concept-tags-container {
+    display: flex;
+    flex-wrap: wrap;
+    /* 允许换行 */
+    gap: 12px;
+    /* 标签之间的间距 (解决挤在一起的问题) */
+    margin-top: 8px;
+    /* 标题和内容之间的距离 */
+}
+
+/* 2. 分类小标题样式 (> TOOLS / > KEYWORDS) */
+.sub-label {
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem !important;
+    color: #666 !important;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+}
+
+/* 给标题加个小装饰线 */
+.sub-label::after {
+    content: '';
+    display: block;
+    width: 30px;
+    height: 1px;
+    background: #333;
+    margin-left: 10px;
+}
+
+/* 3. 工具标签 (Tech Tags) - 实心芯片风格 */
+.tech-tag {
+    font-family: 'Consolas', monospace;
+    font-size: 0.8rem;
+    color: #ccc;
+    background: rgba(255, 255, 255, 0.08);
+    /* 半透明背景 */
+    padding: 6px 12px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    /* 微弱边框 */
+    border-radius: 2px;
+    /* 稍微一点圆角，不要太圆 */
+    transition: all 0.3s ease;
+    cursor: default;
+
+    /* 防止文字换行 */
+    white-space: nowrap;
+}
+
+/* 鼠标悬停发光 */
+.tech-tag:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: var(--accent-color);
+    /* 你的青色 */
+    color: #fff;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.5);
+    transform: translateY(-2px);
+}
+
+/* 4. 关键词标签 (Keywords) - 空心代码风格 */
+.keyword-tag {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    color: var(--accent-color);
+    /* 青色字体 */
+    padding: 4px 10px;
+    border: 1px dashed rgba(0, 240, 255, 0.3);
+    /* 虚线边框 */
+    background: rgba(0, 240, 255, 0.02);
+    border-radius: 20px;
+    /* 胶囊形状，区分于上面的方块 */
+    opacity: 0.9;
+    transition: all 0.3s ease;
+}
+
+.keyword-tag:hover {
+    background: rgba(0, 240, 255, 0.1);
+    border-style: solid;
+    /* 悬停变实线 */
+    border-color: var(--accent-color);
+    text-shadow: 0 0 5px var(--accent-color);
+}
+
+/* 5. 外链按钮区域微调 */
+.project-links {
+    margin-top: 2rem !important;
+    padding-top: 1.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    /* 加一条顶部分割线 */
+}
+
+
+/* --- 详情页：图文混排样式 --- */
+
+/* 图片容器 */
+.archive-inset-box {
+    position: relative;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: rgba(0, 0, 0, 0.3);
+    padding: 5px;
+    /* 图片和边框之间留一点缝隙，像相框 */
+}
+
+/* 图片本体 */
+.archive-inset-img {
+    width: 100%;
+    height: auto;
+    display: block;
+    opacity: 0.9;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    /*内描边*/
+}
+
+/* 图片下方的装饰性编号 */
+.inset-caption {
+    font-family: 'Courier New', monospace;
+    font-size: 0.6rem;
+    color: var(--accent-color);
+    text-align: right;
+    margin-top: 4px;
+    opacity: 0.7;
+    letter-spacing: 1px;
+}
+
+/* --- 动态内容容器 (允许滚动) --- */
+.pages-container {
+    flex: 1;
+    /* 占满剩余高度 */
+    position: relative;
+
+    /* 关键修改：允许垂直滚动 */
+    overflow-y: auto;
+    overflow-x: hidden;
+    /* 禁止水平滚动 */
+
+    /* 增加一点内边距，防止文字贴着滚动条 */
+    padding-right: 10px;
+
+    /* 确保最小高度，防止没内容时塌陷 */
+    min-height: 300px;
+}
+
+/* =========================================
+   CUSTOM SCROLLBAR (终端风格滚动条)
+   ========================================= */
+
+/* 1. 滚动条整体宽度 */
+.pages-container::-webkit-scrollbar {
+    width: 4px;
+    /* 极细，像一条线 */
+}
+
+/* 2. 滚动条轨道 (背景) */
+.pages-container::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    /* 几乎透明的灰色 */
+    border-radius: 2px;
+}
+
+/* 3. 滚动滑块 (移动部分) */
+.pages-container::-webkit-scrollbar-thumb {
+    background: #444;
+    /* 默认深灰色 */
+    border-radius: 2px;
+}
+
+/* 4. 鼠标悬停在滚动区域时，滑块变亮 */
+.pages-container:hover::-webkit-scrollbar-thumb {
+    background: #666;
+}
+
+/* 5. (可选) 如果你想让它更酷，滑块可以是你的主题色 */
+/* .pages-container::-webkit-scrollbar-thumb {
+    background: var(--accent-color); 
+} 
+*/
+
+/* =========================================
+   CYBER PAGING ANIMATION (电子翻页特效)
+   ========================================= */
+
+/* 定义动画关键帧 */
+@keyframes cyber-glitch-in {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px) skewX(-10deg);
+        /* 初始位置偏移+倾斜 */
+        filter: blur(4px);
+        /* 初始模糊 */
+    }
+
+    20% {
+        opacity: 1;
+        transform: translateX(5px) skewX(5deg);
+        /* 反向跳动 */
+        filter: blur(0);
+    }
+
+    40% {
+        opacity: 0.5;
+        /* 闪烁变暗 */
+        transform: translateX(-2px);
+    }
+
+    60% {
+        opacity: 1;
+        transform: translateX(2px);
+    }
+
+    80% {
+        opacity: 0.8;
+        /* 再次微闪 */
+    }
+
+    100% {
+        opacity: 1;
+        transform: translateX(0) skewX(0);
+        /* 归位 */
+        filter: none;
+    }
+}
+
+/* 应用到当前页面的类 */
+.archive-page.active {
+    /* 0.35秒完成动画，linear让节奏更机械 */
+    animation: cyber-glitch-in 0.35s linear forwards;
+
+    /* 保持硬件加速，防止卡顿 */
+    will-change: transform, opacity, filter;
 }

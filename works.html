@@ -161,16 +161,23 @@
                     </div>
                 </div>
 
-                <div class="report-body">
-                    <div class="body-label">DESCRIPTION //</div>
-                    <div class="detail-body">
-                        <p>Loading data...</p>
-                    </div>
+                <div class="pages-container" id="dynamicPagesArea"
+                    style="flex: 1; position: relative; overflow-y: auto; min-height: 300px;">
                 </div>
 
-                <div class="report-footer">
-                    <div class="stamp-box">ARCHIVED</div>
-                    <div class="footer-note">>>> END OF RECORD</div>
+                <div class="pagination-bar" id="paginationBar"
+                    style="border-top: 1px dashed #333; padding-top: 15px; margin-top: auto; display: flex; justify-content: space-between; align-items: center;">
+
+                    <div class="page-indicator"
+                        style="font-family: monospace; font-size: 0.9rem; color: var(--accent-color);">
+                        PAGE <span id="currPageNum">01</span> / <span id="totalPageNum">--</span>
+                    </div>
+
+                    <div class="page-controls" style="display: flex; gap: 10px;">
+                        <button id="prevPageBtn" class="nav-arrow-btn">
+                            < PREV</button>
+                                <button id="nextPageBtn" class="nav-arrow-btn">NEXT ></button>
+                    </div>
                 </div>
 
             </div>
@@ -197,12 +204,7 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- Works 页面专属逻辑 ---
-            const allFiles = document.querySelectorAll('.archive-file');
-            const overlay = document.getElementById('workDetailOverlay');
-            const closeDetailBtn = document.getElementById('closeDetailBtn');
-
-            // 模拟作品数据
+            // === 1. 定义数据：想有几页就写几页，想放什么就放什么 ===
             const worksData = {
                 'work1': {
                     id: 'NO.001',
@@ -210,27 +212,233 @@
                     type: 'Cross-Media Design',
                     title: 'Aurora Path',
                     img: 'images/cover.png',
-                    desc: '该项目通过互动装置科普了极光的成因与变化，将科技与叙事相融，带领观众走入故事中，随着小耳廓狐哈桑共同游览并创造独一无二的极光。<br><br>项目使用TouchDesigner模拟极光，YOLOv8模型实现极光跟随。互动装置通过Esp32与传感器实时监测并传输数据，模拟大气成分与太阳风的变化，改变极光形态，增强互动体验，带来沉浸式的科学探索。'
+
+                    // 核心：这里定义页面列表
+                    contentPages: [
+                        // 第1页：纯文字简介 (保留了你原来的文字)
+                        {
+                            type: 'text',
+                            title: 'DESCRIPTION //',
+                            content: '该项目通过互动装置科普了极光的成因与变化，将科技与叙事相融，带领观众走入故事中，随着小耳廓狐哈桑共同游览并创造独一无二的极光。<br><br>项目使用TouchDesigner模拟极光，YOLOv8模型实现极光跟随。互动装置通过Esp32与传感器实时监测并传输数据，模拟大气成分与太阳风的变化，改变极光形态，增强互动体验，带来沉浸式的科学探索。'
+                        },
+                        // 第2页：数据与外链 (保留了你的视频链接)
+                        {
+                            type: 'meta',
+                            title: 'SYSTEM_DATA //',
+                            tools: ['TouchDesigner', 'YOLOv8', 'Esp32'],
+                            keywords: ['IMMERSIVE', 'INTERACTIVE', 'NATURE'],
+                            links: [
+                                { text: 'WATCH_VIDEO.mp4', url: 'https://www.bilibili.com/video/BV1a4FxenEa5/', icon: '▶' }
+                            ]
+                        },
+                        // 第3页：过程图 (这里是占位符，你可以把图片路径换成你自己的)
+                        {
+                            type: 'gallery',
+                            title: 'ANALYSIS_LOG //',
+                            images: ['images/1.1.png']
+                        }
+                    ]
                 },
+
                 'work2': {
                     id: 'NO.002',
                     year: '2024',
                     type: 'Video Game',
                     title: 'Stability Test v0.1',
                     img: 'images/work2.jpg',
-                    desc: '这是一场关于规则与荒诞的沉浸式实验。<br><br>玩家被选中参与某系统的「稳定性评估」，每日重复着相同的路径：从家到十字路口，再到办公室。一切看似秩序井然——直到玩家开始触碰那些不该触碰的规则。餐桌变成单杠，红绿灯化作食品安全指示牌，同事的工位坍缩成棺材... <br><br>世界正褪去黑白滤镜，裸露出荒诞的彩色内核。'
+
+                    // Work2 只有2页
+                    contentPages: [
+                        {
+                            type: 'text',
+                            title: 'DESCRIPTION //',
+                            content: '这是一场关于规则与荒诞的沉浸式实验。<br><br>玩家被选中参与某系统的「稳定性评估」，每日重复着相同的路径：从家到十字路口，再到办公室。一切看似秩序井然——直到玩家开始触碰那些不该触碰的规则。餐桌变成单杠，红绿灯化作食品安全指示牌，同事的工位坍缩成棺材... <br><br>世界正褪去黑白滤镜，裸露出荒诞的彩色内核。'
+                        },
+                        {
+                            type: 'meta',
+                            title: 'SYSTEM_DATA //',
+                            tools: ['Unity', 'C#', 'Procreate'],
+                            keywords: ['DYSTOPIA', 'GAME_DEV', 'NARRATIVE']
+                            // 这个作品没有外链，所以不写 links
+                        },
+                        {
+                            type: 'text',
+                            title: 'WORLDVIEW_SETTING //',
+                            content: '玩家是一名过着规律生活的普通打工人，每日往返于家与办公室之间。他所看到的世界始终是黑白的，所有物体都被简化为外轮廓。虽然感到异样，但因生活尚能维持，便逐渐习以为常。<br><br>主角的生活中伴随着一段神秘旁白，时而调侃，时而指引，并制定了各种“规则”。直到某天，玩家无意打破其中一条，世界开始失控，旁白变得慌乱，现实出现裂缝。<br><br>原来这是一场由高维生命体搭建的“系统稳定性测试”，玩家是被随机选中的“测试员”。为了节省精力，这些存在以相似物体冒充真实物品，并用黑白滤镜遮蔽细节，再用规则限制玩家的认知。但讽刺的是，这些规则反而成为主角觉醒与抗争的开端。'
+                        },
+                        {
+                            type: 'text_image',
+                            title: 'VISUAL_LANGUAGE //',
+                            img: 'images/2.1.png',
+                            imgRef: '游戏内部分物品变化前后展示',
+                            content: '游戏采用 2.5D 形式营造空间感。初始阶段，世界呈现为纯粹的黑白线条风格，所有物体仅以轮廓存在，象征被简化与遮蔽的认知状态。<br><br>当玩家打破规则后，部分物体转化为彩色实体，揭示其真实面貌。黑白与彩色之间的反差，不只是视觉对比，更象征认知突破与系统漏洞的显现。每一次色彩渗入，都是一次秩序的崩塌。'
+                        }
+                    ]
                 },
+
+                // Work3 只有1页
                 'work3': {
                     id: 'NO.003',
                     year: '2024',
                     type: 'Character Design',
                     title: 'Ilianna',
                     img: 'images/work3.png',
-                    desc: '伊莉安那原本只是一个有些胆小却心地善良的普通学生，她热爱自己的校园生活，也珍惜身边的同学与老师。尽管在日常中隐约察觉过学校里不对劲的细节，她仍选择相信“平凡”的日常。直到某天，她被里世界的存在“它”选中，成为其眷属，被迫在表世界与里世界之间无意识地穿梭。在第一次从里世界逃出后，她被强制编入负责监察异常的督查部，站到了人类阵营的最前线。自此，她体内诞生了表里双重人格：表人格依旧是那个温柔怯懦、渴望守护同伴的她；而里人格则在“它”的污染下觉醒，会在不直接伤害任何人的前提下，引导周围的师生进入里世界。里人格能继承表人格的全部记忆，而表人格却对里人格的行为一无所知，使她在守护与背叛之间，成为一枚游走于光影与裂隙中的危险而温柔的“桥梁”。'
+                    contentPages: [
+                        {
+                            type: 'text',
+                            title: 'DESCRIPTION //',
+                            content: '故事背景：<br>二级学院被里世界怪物“它”侵入，无辜师生和一些学校领地会被“它”拉入里世界，人类阵营为保护无辜师生、抵抗“它”的污染并战胜“它”，任命了班委、辅导员、校工部、督查部、保安部等组织，并分别为其设立了一系列规则以抵抗“它”的认知污染。<br><br>人物经历：<br>伊莉安那本来只是一个普通学生，但因为某些原因被“它”看中选为自己的眷属，从此会受“它”影响无意识地在表里世界穿梭。由于从里世界逃出来的学生都会强制加入督查部，所以伊莉安那在第一次被“它”从里世界送出来后成为了督查部的一员。<br><br>人物设定：<br>本性是一个有点胆小的善良的普通学生，非常喜欢自己的学校和同学们，虽然在入校后隐约察觉到了一些怪异的地方，但还是在普通地过着自己的校园生活。被“它”选中后拥有了表里二重人格，表人格就是原本的人格；里人格是被“它”污染时的人格，会帮助“它”将身边的师生不加伤害地引入到里世界中。里人格主导时会拥有表人格的记忆，但表人格主导时不会拥有里人格的记忆。'
+                        },
+                        // 在 worksData 的 contentPages 数组里添加：
+                        {
+                            type: 'text_image',
+                            title: 'ANALYSIS_LOG //',  // 页面标题
+                            img: 'images/3.1.png', // 图片路径
+                            imgRef: '三视图',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
+                            content: ''
+                        },
+                        {
+                            type: 'text_image',
+                            title: 'ANALYSIS_LOG //',  // 页面标题
+                            img: 'images/3.2.png', // 图片路径
+                            imgRef: '表情差分',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
+                            content: ''
+                        },
+                        {
+                            type: 'text_image',
+                            title: 'ANALYSIS_LOG //',  // 页面标题
+                            img: 'images/3.3.png', // 图片路径
+                            imgRef: '重要道具',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
+                            content: ''
+                        },
+                    ]
                 }
             };
 
-            // === 新增：检查 URL 是否要求自动打开某个作品 ===
+            // === 2. 核心逻辑：自动生成页面 ===
+            let currentPageIndex = 0; // 从0开始计数
+            let currentProjectPages = []; // 当前项目的页面数据
+
+            // 渲染单个页面内容的辅助函数
+            function renderPageHTML(pageData, index) {
+                let innerHTML = '';
+
+                // 根据 type 生成不同类型的 HTML
+                if (pageData.type === 'text') {
+                    // [类型：纯文字]
+                    innerHTML = `<div class="detail-body"><p>${pageData.content}</p></div>`;
+
+                } else if (pageData.type === 'meta') {
+                    // [类型：数据+链接]
+                    let toolsHTML = pageData.tools ? pageData.tools.map(t => `<span class="tech-tag">${t}</span>`).join('') : '';
+                    let kwHTML = pageData.keywords ? pageData.keywords.map(k => `<span class="keyword-tag">#${k}</span>`).join('') : '';
+                    let linksHTML = pageData.links ? pageData.links.map(l => `
+                        <a href="${l.url}" target="_blank" class="archive-btn">
+                            <span class="icon">${l.icon}</span> ${l.text}
+                        </a>`).join('') : '';
+
+                    innerHTML = `
+                        <div class="tech-stack-section" style="margin-bottom:1.5rem">
+                            <div class="sub-label" style="font-size:0.7rem;color:#666;margin-bottom:0.5rem">> TOOLS</div>
+                            <div class="tech-tags-container">${toolsHTML}</div>
+                        </div>
+                        <div class="concept-section" style="margin-bottom:2rem">
+                            <div class="sub-label" style="font-size:0.7rem;color:#666;margin-bottom:0.5rem">> KEYWORDS</div>
+                            <div class="concept-tags-container">${kwHTML}</div>
+                        </div>
+                        <div class="project-links" style="display:flex;gap:1rem;flex-wrap:wrap">${linksHTML}</div>
+                    `;
+
+                } else if (pageData.type === 'text_image') {
+
+                    // 1. 生成图片 HTML (带一个小的装饰性编号)
+                    const imgHTML = `
+                    <div class="archive-inset-box" style="margin-top: 1.5rem;">
+                    <img src="${pageData.img}" class="archive-inset-img">
+                    <div class="inset-caption">REF: ${pageData.imgRef || 'IMG_DATA'}</div>
+                    </div>
+                    `;
+
+                    // 2. 生成文字 HTML
+                    const textHTML = `<div class="detail-body"><p>${pageData.content}</p></div>`;
+
+                    // 3. 组合 (你可以交换这两个变量的顺序来决定图片在文字上面还是下面)
+                    innerHTML = textHTML + imgHTML;
+
+                    // ⬆️⬆️⬆️ [新增结束] ⬆️⬆️⬆️
+
+                } else if (pageData.type === 'gallery') {
+                    // [类型：图片墙]
+                    let imgsHTML = pageData.images.map(src => `<img src="${src}" class="process-thumb">`).join('');
+                    innerHTML = `<div class="process-grid" style="display:grid;grid-template-columns:1fr;gap:20px">${imgsHTML}</div>`;
+                }
+
+                // 返回完整的页面 DOM 结构
+                return `
+                    <div class="archive-page" id="page-${index}" style="display: none;">
+                        <div class="body-label">${pageData.title}</div>
+                        ${innerHTML}
+                    </div>
+                `;
+            }
+
+            // 刷新翻页器状态
+            function updatePaginationUI() {
+                const total = currentProjectPages.length;
+
+                // 1. 显示/隐藏页面
+                for (let i = 0; i < total; i++) {
+                    const pageEl = document.getElementById(`page-${i}`);
+                    if (pageEl) {
+                        // 如果是当前页
+                        if (i === currentPageIndex) {
+                            pageEl.style.display = 'block';
+
+                            // --- 核心技巧：移除 -> 强制重绘 -> 添加 ---
+                            pageEl.classList.remove('active');
+
+                            // 这行代码虽然看起来没用，但它强制浏览器重新计算布局，从而重置动画
+                            void pageEl.offsetWidth;
+
+                            pageEl.classList.add('active');
+
+                        } else {
+                            // 如果不是当前页，直接隐藏
+                            pageEl.style.display = 'none';
+                            pageEl.classList.remove('active');
+                        }
+                    }
+                }
+
+                // 2. 更新页码文字
+                document.getElementById('currPageNum').innerText = `0${currentPageIndex + 1}`;
+                document.getElementById('totalPageNum').innerText = `0${total}`;
+
+                // 3. 更新按钮状态
+                const prevBtn = document.getElementById('prevPageBtn');
+                const nextBtn = document.getElementById('nextPageBtn');
+                const navBar = document.getElementById('paginationBar');
+
+                // 如果只有1页，隐藏整个翻页条，或者禁用按钮
+                if (total <= 1) {
+                    navBar.style.opacity = '0.3'; // 变淡
+                    navBar.style.pointerEvents = 'none'; // 甚至不可点击
+                } else {
+                    navBar.style.opacity = '1';
+                    navBar.style.pointerEvents = 'auto';
+
+                    prevBtn.classList.toggle('disabled', currentPageIndex === 0);
+                    nextBtn.classList.toggle('disabled', currentPageIndex === total - 1);
+                }
+            }
+
+            // === Works 页面专属逻辑 ===
+            const allFiles = document.querySelectorAll('.archive-file');
+            const overlay = document.getElementById('workDetailOverlay');
+            const closeDetailBtn = document.getElementById('closeDetailBtn');
+            const container = document.getElementById('dynamicPagesArea');
+
+            // 检查 URL 是否要求自动打开某个作品
             const urlParams = new URLSearchParams(window.location.search);
             const targetId = urlParams.get('open'); // 获取 ?open= 后面的值
 
@@ -238,13 +446,12 @@
                 const targetFile = document.querySelector(`.archive-file[data-id="${targetId}"]`);
                 if (targetFile) {
                     setTimeout(() => {
-                        // 模拟点击打开
                         targetFile.click();
                     }, 600);
                 }
             }
 
-            // 2. 点击事件中的注入逻辑更新
+            // 点击事件中的注入逻辑更新
             allFiles.forEach(file => {
                 file.addEventListener('click', () => {
                     if (file.classList.contains('incomplete')) return;
@@ -253,21 +460,25 @@
                     const data = worksData[id];
 
                     if (data) {
-                        // 填充顶部 FILE_ID
+                        // 1. 填充头部基本信息 (标题、年份等)
                         overlay.querySelector('#d-id').innerText = data.id;
-
-                        // 填充图片
                         overlay.querySelector('.detail-img').src = data.img;
-
-                        // 填充标题
                         overlay.querySelector('.detail-title').innerText = data.title;
-
-                        // 填充元数据 (年份和类型)
                         overlay.querySelector('.detail-year').innerText = data.year;
                         overlay.querySelector('.detail-type').innerText = data.type;
 
-                        // 填充正文 (支持HTML换行)
-                        overlay.querySelector('.detail-body p').innerHTML = data.desc;
+                        // 2. [核心] 生成动态页面
+                        currentProjectPages = data.contentPages || []; // 获取页面数组
+                        currentPageIndex = 0; // 重置为第1页
+                        container.innerHTML = ''; // 清空容器
+
+                        // 循环生成每一页的 HTML
+                        currentProjectPages.forEach((pageData, index) => {
+                            container.innerHTML += renderPageHTML(pageData, index);
+                        });
+
+                        // 3. 初始化分页 UI
+                        updatePaginationUI();
 
                         overlay.classList.add('active');
                     }
@@ -277,6 +488,21 @@
             // 关闭详情页
             closeDetailBtn.addEventListener('click', () => {
                 overlay.classList.remove('active');
+            });
+
+            // === 翻页按钮事件 ===
+            document.getElementById('prevPageBtn').addEventListener('click', () => {
+                if (currentPageIndex > 0) {
+                    currentPageIndex--;
+                    updatePaginationUI();
+                }
+            });
+
+            document.getElementById('nextPageBtn').addEventListener('click', () => {
+                if (currentPageIndex < currentProjectPages.length - 1) {
+                    currentPageIndex++;
+                    updatePaginationUI();
+                }
             });
 
             // --- Contact 弹窗逻辑 (通用) ---
