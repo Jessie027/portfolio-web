@@ -106,6 +106,23 @@
         </div>
     </div>
 
+    <div class="sound-control" id="soundToggle">
+        <div class="sound-icon"></div>
+        <div class="sound-text">AUDIO: OFF</div>
+    </div>
+
+    <audio id="audio-bgm" loop>
+        <source src="sounds/drone.wav" type="audio/wav">
+    </audio>
+
+    <audio id="audio-hover">
+        <source src="sounds/hover.wav" type="audio/wav">
+    </audio>
+    <audio id="audio-click">
+        <source src="sounds/click.wav" type="audio/wav">
+    </audio>
+
+    <script src="sound.js"></script>
     <script src="transition.js"></script>
     <script src="cursor.js"></script>
 
@@ -152,6 +169,29 @@
                     });
                 });
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // === 自动翻转当前页面的导航按钮 ===
+
+            // 1. 获取当前页面文件名 (比如 "works.html")
+            // 如果路径只有 "/"，默认为 "index.html"
+            const path = window.location.pathname;
+            const page = path.split("/").pop() || 'index.html';
+
+            // 2. 找到所有导航按钮
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // 3. 遍历比对
+            navItems.forEach(item => {
+                const link = item.getAttribute('href');
+
+                // 如果当前页面的文件名包含在链接里 (比如 works.html 匹配 works.html)
+                if (link && page.includes(link)) {
+                    // 给它加上 active 类 -> CSS 会让它自动翻转并亮起
+                    item.classList.add('active');
+                }
+            });
         });
     </script>
 </body>

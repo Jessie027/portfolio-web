@@ -43,7 +43,7 @@
         <div class="subtitle">—— 记录一些作品 以及 未完成的故事 ——</div>
     </div>
 
-    <nav class="nav-menu" id="navMenu">
+    <nav class="nav-menu home-nav" id="navMenu">
         <a href="index.html" class="nav-item transition-link">
             <div class="nav-flipper">
                 <div class="nav-face nav-front">Home</div>
@@ -127,6 +127,23 @@
     <div class="cursor-dot" id="cursorDot"></div>
     <div class="cursor-circle" id="cursorCircle"></div>
 
+    <div class="sound-control" id="soundToggle">
+        <div class="sound-icon"></div>
+        <div class="sound-text">AUDIO: OFF</div>
+    </div>
+
+    <audio id="audio-bgm" loop>
+        <source src="sounds/drone.wav" type="audio/wav">
+    </audio>
+
+    <audio id="audio-hover">
+        <source src="sounds/hover.wav" type="audio/wav">
+    </audio>
+    <audio id="audio-click">
+        <source src="sounds/click.wav" type="audio/wav">
+    </audio>
+
+    <script src="sound.js"></script>
     <script src="transition.js"></script>
     <script src="cursor.js"></script>
 
@@ -153,6 +170,8 @@
                 subtitle.style.opacity = "0";
                 introBox.classList.remove('moved');
 
+                navMenu.style.opacity = "0";
+
                 // B. 开始播放动画序列
 
                 // 0.5秒后：大标题淡入
@@ -166,11 +185,13 @@
                     introBox.classList.add('moved');
                     headerBg.style.opacity = "1";
                     staticLine.style.opacity = "1";
-                    navMenu.style.opacity = "1";
                 }, 3000);
 
                 // 4.0秒后：内容淡入
-                setTimeout(() => { mainContent.classList.add('fade-in'); }, 4000);
+                setTimeout(() => {
+                    mainContent.classList.add('fade-in');
+                    navMenu.style.opacity = "1";
+                }, 3500);
             }
 
             // 2. 检查是否第一次访问
@@ -254,6 +275,29 @@
                     });
                 });
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // === 自动翻转当前页面的导航按钮 ===
+
+            // 1. 获取当前页面文件名 (比如 "works.html")
+            // 如果路径只有 "/"，默认为 "index.html"
+            const path = window.location.pathname;
+            const page = path.split("/").pop() || 'index.html';
+
+            // 2. 找到所有导航按钮
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // 3. 遍历比对
+            navItems.forEach(item => {
+                const link = item.getAttribute('href');
+
+                // 如果当前页面的文件名包含在链接里 (比如 works.html 匹配 works.html)
+                if (link && page.includes(link)) {
+                    // 给它加上 active 类 -> CSS 会让它自动翻转并亮起
+                    item.classList.add('active');
+                }
+            });
         });
     </script>
 </body>

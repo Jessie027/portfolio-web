@@ -110,6 +110,17 @@
                 </div>
             </div>
 
+            <div class="archive-file completed" data-id="work4">
+                <div class="file-spine">
+                    <span class="file-code">NO.004</span>
+                    <span class="file-title">CoMerit</span>
+                    <div class="file-status-light"></div>
+                </div>
+                <div class="file-cover" style="background-image: url('images/work4.png');">
+                    <div class="cover-overlay">VIEW FILE</div>
+                </div>
+            </div>
+
         </div>
 
         <div class="shelf-line"></div>
@@ -199,6 +210,24 @@
         </div>
     </div>
 
+
+    <div class="sound-control" id="soundToggle">
+        <div class="sound-icon"></div>
+        <div class="sound-text">AUDIO: OFF</div>
+    </div>
+
+    <audio id="audio-bgm" loop>
+        <source src="sounds/drone.wav" type="audio/wav">
+    </audio>
+
+    <audio id="audio-hover">
+        <source src="sounds/hover.wav" type="audio/wav">
+    </audio>
+    <audio id="audio-click">
+        <source src="sounds/click.wav" type="audio/wav">
+    </audio>
+
+    <script src="sound.js"></script>
     <script src="transition.js"></script>
     <script src="cursor.js"></script>
 
@@ -233,9 +262,18 @@
                         },
                         // 第3页：过程图 (这里是占位符，你可以把图片路径换成你自己的)
                         {
-                            type: 'gallery',
-                            title: 'ANALYSIS_LOG //',
-                            images: ['images/1.1.png']
+                            type: 'text_image',
+                            title: 'INSTALLATION_COMPOSITION //',
+                            img: 'images/1.1.png',
+                            imgRef: '装置构成',
+                            content: '空中：<br>被悬挂起来的纱面组，总长约7米，布面间隔0.4米，高度1.5米。<br><br>地面：<br>三个地点地贴（北京、冰岛、北极）从南向北排列，为模拟真实看极光仰角，三个地点与布面距离不同。<br>两个交互装置。'
+                        },
+                        {
+                            type: 'text_image',
+                            title: 'SCIENCE_NARRATIVE //',
+                            img: 'images/1.2.png',
+                            imgRef: '哈桑与织光号',
+                            content: '角色设计<br>来自北非的小耳廓狐，勇敢、好奇，梦想追寻极光。<br><br>故事概要<br>哈桑驾驶飞船“织光号”，从北京出发，记录下了壮观的红色极光，一路飞越冰岛与极点，沉醉于极光的绚丽多彩。最后，他冲向宇宙，通过互动装置与观众一起创造了独特的专属极光。'
                         }
                     ]
                 },
@@ -262,8 +300,10 @@
                             // 这个作品没有外链，所以不写 links
                         },
                         {
-                            type: 'text',
+                            type: 'text_image',
                             title: 'WORLDVIEW_SETTING //',
+                            img: 'images/2.2.png',
+                            imgRef: '核心系统图',
                             content: '玩家是一名过着规律生活的普通打工人，每日往返于家与办公室之间。他所看到的世界始终是黑白的，所有物体都被简化为外轮廓。虽然感到异样，但因生活尚能维持，便逐渐习以为常。<br><br>主角的生活中伴随着一段神秘旁白，时而调侃，时而指引，并制定了各种“规则”。直到某天，玩家无意打破其中一条，世界开始失控，旁白变得慌乱，现实出现裂缝。<br><br>原来这是一场由高维生命体搭建的“系统稳定性测试”，玩家是被随机选中的“测试员”。为了节省精力，这些存在以相似物体冒充真实物品，并用黑白滤镜遮蔽细节，再用规则限制玩家的认知。但讽刺的是，这些规则反而成为主角觉醒与抗争的开端。'
                         },
                         {
@@ -289,28 +329,74 @@
                             title: 'DESCRIPTION //',
                             content: '故事背景：<br>二级学院被里世界怪物“它”侵入，无辜师生和一些学校领地会被“它”拉入里世界，人类阵营为保护无辜师生、抵抗“它”的污染并战胜“它”，任命了班委、辅导员、校工部、督查部、保安部等组织，并分别为其设立了一系列规则以抵抗“它”的认知污染。<br><br>人物经历：<br>伊莉安那本来只是一个普通学生，但因为某些原因被“它”看中选为自己的眷属，从此会受“它”影响无意识地在表里世界穿梭。由于从里世界逃出来的学生都会强制加入督查部，所以伊莉安那在第一次被“它”从里世界送出来后成为了督查部的一员。<br><br>人物设定：<br>本性是一个有点胆小的善良的普通学生，非常喜欢自己的学校和同学们，虽然在入校后隐约察觉到了一些怪异的地方，但还是在普通地过着自己的校园生活。被“它”选中后拥有了表里二重人格，表人格就是原本的人格；里人格是被“它”污染时的人格，会帮助“它”将身边的师生不加伤害地引入到里世界中。里人格主导时会拥有表人格的记忆，但表人格主导时不会拥有里人格的记忆。'
                         },
+                        {
+                            type: 'meta',
+                            title: 'SYSTEM_DATA //',
+                            tools: ['Procreate'],
+                            keywords: ['OTHERWORLD', 'DUAL_PERSONA', 'RULES_HORROR']
+                            // 这个作品没有外链，所以不写 links
+                        },
                         // 在 worksData 的 contentPages 数组里添加：
                         {
                             type: 'text_image',
-                            title: 'ANALYSIS_LOG //',  // 页面标题
+                            title: 'THREE_VIEW //',  // 页面标题
                             img: 'images/3.1.png', // 图片路径
                             imgRef: '三视图',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
                             content: ''
                         },
                         {
                             type: 'text_image',
-                            title: 'ANALYSIS_LOG //',  // 页面标题
+                            title: 'EXPRESSION_DIFFERENCE //',  // 页面标题
                             img: 'images/3.2.png', // 图片路径
                             imgRef: '表情差分',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
                             content: ''
                         },
                         {
                             type: 'text_image',
-                            title: 'ANALYSIS_LOG //',  // 页面标题
+                            title: 'IMPORTANT_PROPS //',  // 页面标题
                             img: 'images/3.3.png', // 图片路径
                             imgRef: '重要道具',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
                             content: ''
                         },
+                    ]
+                },
+
+                'work4': {
+                    id: 'NO.004',
+                    year: '2025',
+                    type: 'Speculative APP Design',
+                    title: 'CoMerit',
+                    img: 'images/work4.png',
+                    contentPages: [
+                        {
+                            type: 'text',
+                            title: 'DESCRIPTION //',
+                            content: '在智能系统深度介入社会治理的未来，人类与算法之间形成了一种表面“共生”、实则不对等的互动关系。CoMerit 即诞生于这样的背景之中：它是一套由智能评分与集体评价共同构成的校园绩效系统，持续监控并量化学生的学习表现、社交行为与情绪倾向，以维护一种被称为“智能公平”的秩序。<br><br>在这一体系中，人类与智能不再只是协作，而是进入一种“共同构成价值”的结构——个体行为为算法提供训练素材，算法标准又反向塑造个体的言行和身份。CoMerit 以游戏化外表包装智能治理的冷静与高效，展现出一种被表述为“共生”但本质上逐渐侵蚀人性的互动模式。<br><br>本项目通过这一未来场景，探讨优绩主义在智能技术加持下如何被放大、固化，并反向重塑社会关系。它提醒我们：当算法开始参与定义“优秀”，我们究竟是在与智能共生，还是在被智能逻辑重新塑造？'
+                        },
+                        {
+                            type: 'meta',
+                            title: 'SYSTEM_DATA //',
+                            tools: ['Figma'],
+                            keywords: ['ALGORITHMIC MERITOCRACY', 'GAMIFIED GOVERNANCE'],
+                            links: [
+                                { text: 'EXPERIENCE the PROTOTYPE', url: 'https://www.figma.com/proto/yo07xvpGX7ksANYmqnhTAK/%E4%BA%A4%E4%BA%92%E7%BB%BC%E5%90%88app?node-id=0-1&t=OxjDpHHGejM7FXRX-1', icon: '▶' }
+                            ]
+                        },
+                        // 在 worksData 的 contentPages 数组里添加：
+                        {
+                            type: 'text_image',
+                            title: 'STAKEHOLDER_MAP //',  // 页面标题
+                            img: 'images/4.1.png', // 图片路径
+                            imgRef: 'Stakeholder Map',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
+                            content: '核心层（直接用户）<br>学生：系统中的主要使用者与被评估者，提供数据、参与排名、体验“优绩化生存”。<br><br>支持层（平台与技术）<br>学校：维护系统、设定规则、调控权重。<br>AI：负责识别、评分、归档，作为“冷漠的法官”。<br><br>外部层（社会与环境）<br>政府：决定算法教育的合法性与社会接受度。<br>家长：依赖系统评分评估学校与学生表现，对制度形成间接压力。<br>企业：未来人才的主要接收方，将 CoMerit 分数作为筛选毕业生的重要依据，延续“优绩逻辑”从校园到社会的循环。'
+                        },
+                        {
+                            type: 'text_image',
+                            title: 'USER_JOURNEY //',  // 页面标题
+                            img: 'images/4.2.png', // 图片路径
+                            imgRef: 'User Journey Map',          // [可选] 图片右下角的编号，不填默认显示 IMG_DATA
+                            content: ''
+                        }
                     ]
                 }
             };
@@ -544,6 +630,29 @@
                     });
                 });
             }
+        });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            // === 自动翻转当前页面的导航按钮 ===
+
+            // 1. 获取当前页面文件名 (比如 "works.html")
+            // 如果路径只有 "/"，默认为 "index.html"
+            const path = window.location.pathname;
+            const page = path.split("/").pop() || 'index.html';
+
+            // 2. 找到所有导航按钮
+            const navItems = document.querySelectorAll('.nav-item');
+
+            // 3. 遍历比对
+            navItems.forEach(item => {
+                const link = item.getAttribute('href');
+
+                // 如果当前页面的文件名包含在链接里 (比如 works.html 匹配 works.html)
+                if (link && page.includes(link)) {
+                    // 给它加上 active 类 -> CSS 会让它自动翻转并亮起
+                    item.classList.add('active');
+                }
+            });
         });
     </script>
 </body>
